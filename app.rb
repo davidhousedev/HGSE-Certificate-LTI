@@ -36,6 +36,14 @@ def course_router(name)
   end
 end 
 
+# The following functions will iterate through a string and substitute strings
+# according to the first argument with strings from the second parameter.  When
+# writing these escape sequences, it is important to remember that you must 
+# both escape as necessary in the Ruby string and pre-emptively for the Javascript
+# string.  This is why escape_backlash appears to write four backslashes, when in 
+# reality, two of those four are there to escape the other two backslashes for Ruby.
+#
+# syntax: gsub(detected string, replacement string)
 def escape_double_quote(string)
   string.gsub('"', '\"')
 end
@@ -95,7 +103,9 @@ get "/cert" do
   # If course matches existing course, set variables and proceed
   # If not, render error message
   course_router(session['context_title'])
-  #@full_name = escape_single_quote(@full_name)
+  
+  # Run all escape character functions on student's name
+  @full_name = escape_single_quote(@full_name)
   @full_name = escape_double_quote(@full_name)
   @full_name = escape_backslash(@full_name)
 

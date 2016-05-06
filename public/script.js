@@ -79,6 +79,7 @@ doc.myText("Acknowledges", {align: "center"}, 0, 120);
 
 doc.setFontSize("30");
 doc.setTextColor(170, 31, 52); // sets text color (r, g, b)
+//TODO: Add support for very long names, in keeping with long course titles
 doc.myText(name, {align: "center"}, 0, 140);
 
 doc.setFontSize("15");

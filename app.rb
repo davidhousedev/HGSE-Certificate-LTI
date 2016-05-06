@@ -36,6 +36,19 @@ def course_router(name)
   end
 end 
 
+def escape_double_quote(string)
+  string.gsub('"', '\"')
+end
+
+def escape_backslash(string)
+  string.gsub("\\", "\\\\")
+end
+
+def escape_single_quote(string)
+  string.gsub("'", "\\\\'")
+end
+
+
 post "/start" do
   # first we have to verify the oauth signature, to make sure this isn't an
   # attempt to hack the planet
@@ -71,7 +84,7 @@ get "/cert" do
 
   ######## Initialize variables according to specific course ########
   #TODO: Find all variables that would need to alter dynamic content on PDF
-  @full_name = session['lis_person_name_full']
+  @full_name = "David \"Mean-Muggin\" O'Malley"
   @credit_hours = "42" #TODO: Feed this info from Canvas
 
   @course_title = "default"
@@ -82,6 +95,9 @@ get "/cert" do
   # If course matches existing course, set variables and proceed
   # If not, render error message
   course_router(session['context_title'])
+  #@full_name = escape_single_quote(@full_name)
+  @full_name = escape_double_quote(@full_name)
+  @full_name = escape_backslash(@full_name)
 
   # render HTML document with ERB, allowing Ruby code to be 
   # evaluated <% within these tags %>

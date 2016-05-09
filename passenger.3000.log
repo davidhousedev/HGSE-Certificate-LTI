@@ -1,0 +1,125 @@
+[ 2016-05-09 15:42:27.7327 4457/7f90bc212780 age/Wat/WatchdogMain.cpp:1301 ]: Starting Passenger watchdog...
+[ 2016-05-09 15:42:27.7365 4460/7f06c56f0780 age/Cor/CoreMain.cpp:982 ]: Starting Passenger core...
+[ 2016-05-09 15:42:27.7367 4460/7f06c56f0780 age/Cor/CoreMain.cpp:235 ]: Passenger core running in multi-application mode.
+[ 2016-05-09 15:42:27.7377 4460/7f06c56f0780 age/Cor/CoreMain.cpp:732 ]: Passenger core online, PID 4460
+[ 2016-05-09 15:42:27.7422 4465/7effcaa8d780 age/Ust/UstRouterMain.cpp:529 ]: Starting Passenger UstRouter...
+[ 2016-05-09 15:42:27.7426 4465/7effcaa8d780 age/Ust/UstRouterMain.cpp:342 ]: Passenger UstRouter online, PID 4465
+2016/05/09 15:42:30 [error] 4475#0: *4 directory index of "/home/david/git/HGSE-Certificate-LTI/public/" is forbidden, client: 127.0.0.1, server: _, request: "HEAD / HTTP/1.1", host: "0.0.0.0"
+2016/05/09 15:42:39 [error] 4475#0: *5 directory index of "/home/david/git/HGSE-Certificate-LTI/public/" is forbidden, client: 127.0.0.1, server: _, request: "GET / HTTP/1.1", host: "0.0.0.0:3000"
+2016/05/09 15:42:41 [error] 4475#0: *5 directory index of "/home/david/git/HGSE-Certificate-LTI/public/" is forbidden, client: 127.0.0.1, server: _, request: "GET / HTTP/1.1", host: "0.0.0.0:3000"
+
+[ 2016-05-09 15:43:08.2562 4460/7f06c36a9700 age/Cor/CoreMain.cpp:532 ]: Signal received. Gracefully shutting down... (send signal 2 more time(s) to force shutdown)
+[ 2016-05-09 15:43:08.2563 4460/7f06c56f0780 age/Cor/CoreMain.cpp:901 ]: Received command to shutdown gracefully. Waiting until all clients have disconnected...
+[ 2016-05-09 15:43:08.2564 4460/7f06c2ea8700 Ser/Server.h:817 ]: [ApiServer] Freed 0 spare client objects
+[ 2016-05-09 15:43:08.2565 4460/7f06c2ea8700 Ser/Server.h:464 ]: [ApiServer] Shutdown finished
+[ 2016-05-09 15:43:08.2566 4460/7f06c36a9700 Ser/Server.h:817 ]: [ServerThr.1] Freed 128 spare client objects
+[ 2016-05-09 15:43:08.2567 4460/7f06c36a9700 Ser/Server.h:464 ]: [ServerThr.1] Shutdown finished
+
+[ 2016-05-09 15:43:08.2629 4465/7effc8c25700 age/Ust/UstRouterMain.cpp:422 ]: Signal received. Gracefully shutting down... (send signal 2 more time(s) to force shutdown)
+[ 2016-05-09 15:43:08.2629 4465/7effcaa8d780 age/Ust/UstRouterMain.cpp:492 ]: Received command to shutdown gracefully. Waiting until all clients have disconnected...
+[ 2016-05-09 15:43:08.2630 4465/7effc3fff700 Ser/Server.h:817 ]: [UstRouterApiServer] Freed 0 spare client objects
+[ 2016-05-09 15:43:08.2630 4465/7effc3fff700 Ser/Server.h:464 ]: [UstRouterApiServer] Shutdown finished
+[ 2016-05-09 15:43:08.2634 4465/7effc8c25700 Ser/Server.h:464 ]: [UstRouter] Shutdown finished
+[ 2016-05-09 15:43:08.2637 4465/7effcaa8d780 age/Ust/UstRouterMain.cpp:523 ]: Passenger UstRouter shutdown finished
+[ 2016-05-09 15:43:08.2942 4460/7f06c56f0780 age/Cor/CoreMain.cpp:967 ]: Passenger core shutdown finished
+[ 2016-05-09 15:43:20.4450 4515/7f4987d3c7c0 age/Wat/WatchdogMain.cpp:1301 ]: Starting Passenger watchdog...
+[ 2016-05-09 15:43:20.4587 4518/7fb2ce1667c0 age/Cor/CoreMain.cpp:982 ]: Starting Passenger core...
+[ 2016-05-09 15:43:20.4588 4518/7fb2ce1667c0 age/Cor/CoreMain.cpp:235 ]: Passenger core running in multi-application mode.
+[ 2016-05-09 15:43:20.4605 4518/7fb2ce1667c0 age/Cor/CoreMain.cpp:732 ]: Passenger core online, PID 4518
+[ 2016-05-09 15:43:20.4682 4523/7f34904137c0 age/Ust/UstRouterMain.cpp:529 ]: Starting Passenger UstRouter...
+[ 2016-05-09 15:43:20.4689 4523/7f34904137c0 age/Ust/UstRouterMain.cpp:342 ]: Passenger UstRouter online, PID 4523
+2016/05/09 15:43:22 [error] 4533#0: *4 directory index of "/home/david/git/HGSE-Certificate-LTI/public/" is forbidden, client: 127.0.0.1, server: _, request: "HEAD / HTTP/1.1", host: "0.0.0.0"
+
+[ 2016-05-09 15:43:24.8122 4518/7fb2c79a3700 age/Cor/CoreMain.cpp:532 ]: Signal received. Gracefully shutting down... (send signal 2 more time(s) to force shutdown)
+[ 2016-05-09 15:43:24.8123 4518/7fb2ce1667c0 age/Cor/CoreMain.cpp:901 ]: Received command to shutdown gracefully. Waiting until all clients have disconnected...
+[ 2016-05-09 15:43:24.8124 4518/7fb2c71a2700 Ser/Server.h:817 ]: [ApiServer] Freed 0 spare client objects
+[ 2016-05-09 15:43:24.8124 4518/7fb2c71a2700 Ser/Server.h:464 ]: [ApiServer] Shutdown finished
+[ 2016-05-09 15:43:24.8126 4518/7fb2c79a3700 Ser/Server.h:817 ]: [ServerThr.1] Freed 128 spare client objects
+[ 2016-05-09 15:43:24.8126 4518/7fb2c79a3700 Ser/Server.h:464 ]: [ServerThr.1] Shutdown finished
+
+[ 2016-05-09 15:43:24.8135 4523/7f3489c15700 age/Ust/UstRouterMain.cpp:422 ]: Signal received. Gracefully shutting down... (send signal 2 more time(s) to force shutdown)
+[ 2016-05-09 15:43:24.8136 4523/7f34904137c0 age/Ust/UstRouterMain.cpp:492 ]: Received command to shutdown gracefully. Waiting until all clients have disconnected...
+[ 2016-05-09 15:43:24.8136 4523/7f3489414700 Ser/Server.h:817 ]: [UstRouterApiServer] Freed 0 spare client objects
+[ 2016-05-09 15:43:24.8136 4523/7f3489414700 Ser/Server.h:464 ]: [UstRouterApiServer] Shutdown finished
+[ 2016-05-09 15:43:24.8139 4523/7f3489c15700 Ser/Server.h:464 ]: [UstRouter] Shutdown finished
+[ 2016-05-09 15:43:24.8141 4523/7f34904137c0 age/Ust/UstRouterMain.cpp:523 ]: Passenger UstRouter shutdown finished
+[ 2016-05-09 15:43:24.8375 4518/7fb2ce1667c0 age/Cor/CoreMain.cpp:967 ]: Passenger core shutdown finished
+[ 2016-05-09 15:45:43.9709 4702/7f5b19a82780 age/Wat/WatchdogMain.cpp:1301 ]: Starting Passenger watchdog...
+[ 2016-05-09 15:45:43.9772 4705/7fdf5aa0c780 age/Cor/CoreMain.cpp:982 ]: Starting Passenger core...
+[ 2016-05-09 15:45:43.9775 4705/7fdf5aa0c780 age/Cor/CoreMain.cpp:235 ]: Passenger core running in multi-application mode.
+[ 2016-05-09 15:45:43.9793 4705/7fdf5aa0c780 age/Cor/CoreMain.cpp:732 ]: Passenger core online, PID 4705
+[ 2016-05-09 15:45:43.9877 4710/7fad14d26780 age/Ust/UstRouterMain.cpp:529 ]: Starting Passenger UstRouter...
+[ 2016-05-09 15:45:43.9884 4710/7fad14d26780 age/Ust/UstRouterMain.cpp:342 ]: Passenger UstRouter online, PID 4710
+App 4741 stdout: 
+App 4741 stdout: 
+[ 2016-05-09 15:45:47.8575 4705/7fdf581c4700 age/Cor/App/Implementation.cpp:304 ]: Could not spawn process for application /home/david/git/HGSE-Certificate-LTI: An error occurred while starting up the preloader.
+  Error ID: 092905c6
+  Error details saved to: /tmp/passenger-error-xyXleq.html
+  Message from application: missing run or map statement (RuntimeError)
+  /usr/local/rvm/gems/ruby-2.3.0/gems/rack-1.6.0/lib/rack/builder.rb:146:in `to_app'
+  config.ru:4:in `<main>'
+  /usr/local/rvm/gems/ruby-2.3.0/gems/passenger-5.0.28/src/helper-scripts/rack-preloader.rb:110:in `eval'
+  /usr/local/rvm/gems/ruby-2.3.0/gems/passenger-5.0.28/src/helper-scripts/rack-preloader.rb:110:in `preload_app'
+  /usr/local/rvm/gems/ruby-2.3.0/gems/passenger-5.0.28/src/helper-scripts/rack-preloader.rb:156:in `<module:App>'
+  /usr/local/rvm/gems/ruby-2.3.0/gems/passenger-5.0.28/src/helper-scripts/rack-preloader.rb:30:in `<module:PhusionPassenger>'
+  /usr/local/rvm/gems/ruby-2.3.0/gems/passenger-5.0.28/src/helper-scripts/rack-preloader.rb:29:in `<main>'
+
+
+[ 2016-05-09 15:45:47.8963 4705/7fdf589c5700 age/Cor/Con/CheckoutSession.cpp:285 ]: [Client 1-1] Cannot checkout session because a spawning error occurred. The identifier of the error is 092905c6. Please see earlier logs for details about the error.
+
+[ 2016-05-09 15:47:49.0644 4705/7fdf589c5700 age/Cor/CoreMain.cpp:532 ]: Signal received. Gracefully shutting down... (send signal 2 more time(s) to force shutdown)
+[ 2016-05-09 15:47:49.0644 4705/7fdf5aa0c780 age/Cor/CoreMain.cpp:901 ]: Received command to shutdown gracefully. Waiting until all clients have disconnected...
+[ 2016-05-09 15:47:49.0644 4705/7fdf53fff700 Ser/Server.h:817 ]: [ApiServer] Freed 0 spare client objects
+[ 2016-05-09 15:47:49.0644 4705/7fdf53fff700 Ser/Server.h:464 ]: [ApiServer] Shutdown finished
+[ 2016-05-09 15:47:49.0645 4705/7fdf589c5700 Ser/Server.h:817 ]: [ServerThr.1] Freed 128 spare client objects
+[ 2016-05-09 15:47:49.0645 4705/7fdf589c5700 Ser/Server.h:464 ]: [ServerThr.1] Shutdown finished
+
+[ 2016-05-09 15:47:49.0647 4710/7fad12ebe700 age/Ust/UstRouterMain.cpp:422 ]: Signal received. Gracefully shutting down... (send signal 2 more time(s) to force shutdown)
+[ 2016-05-09 15:47:49.0647 4710/7fad14d26780 age/Ust/UstRouterMain.cpp:492 ]: Received command to shutdown gracefully. Waiting until all clients have disconnected...
+[ 2016-05-09 15:47:49.0647 4710/7fad126bd700 Ser/Server.h:817 ]: [UstRouterApiServer] Freed 0 spare client objects
+[ 2016-05-09 15:47:49.0647 4710/7fad126bd700 Ser/Server.h:464 ]: [UstRouterApiServer] Shutdown finished
+[ 2016-05-09 15:47:49.0649 4710/7fad12ebe700 Ser/Server.h:464 ]: [UstRouter] Shutdown finished
+[ 2016-05-09 15:47:49.0650 4710/7fad14d26780 age/Ust/UstRouterMain.cpp:523 ]: Passenger UstRouter shutdown finished
+[ 2016-05-09 15:47:49.0871 4705/7fdf5aa0c780 age/Cor/CoreMain.cpp:967 ]: Passenger core shutdown finished
+[ 2016-05-09 15:47:51.6609 4824/7f757d4f0780 age/Wat/WatchdogMain.cpp:1301 ]: Starting Passenger watchdog...
+[ 2016-05-09 15:47:51.6849 4827/7fe609d0a780 age/Cor/CoreMain.cpp:982 ]: Starting Passenger core...
+[ 2016-05-09 15:47:51.6870 4827/7fe609d0a780 age/Cor/CoreMain.cpp:235 ]: Passenger core running in multi-application mode.
+[ 2016-05-09 15:47:51.6888 4827/7fe609d0a780 age/Cor/CoreMain.cpp:732 ]: Passenger core online, PID 4827
+[ 2016-05-09 15:47:51.7044 4832/7fcbfaa89780 age/Ust/UstRouterMain.cpp:529 ]: Starting Passenger UstRouter...
+[ 2016-05-09 15:47:51.7071 4832/7fcbfaa89780 age/Ust/UstRouterMain.cpp:342 ]: Passenger UstRouter online, PID 4832
+App 4863 stdout: 
+App 4863 stdout: 
+[ 2016-05-09 15:47:55.5076 4827/7fe606cc1700 age/Cor/App/Implementation.cpp:304 ]: Could not spawn process for application /home/david/git/HGSE-Certificate-LTI: An error occurred while starting up the preloader.
+  Error ID: e4bab9ae
+  Error details saved to: /tmp/passenger-error-Gs2ERp.html
+  Message from application: undefined method `enable' for main:Object (NoMethodError)
+  /home/david/git/HGSE-Certificate-LTI/app.rb:18:in `<top (required)>'
+  config.ru:1:in `require'
+  config.ru:1:in `block in <main>'
+  /usr/local/rvm/gems/ruby-2.3.0/gems/rack-1.6.0/lib/rack/builder.rb:55:in `instance_eval'
+  /usr/local/rvm/gems/ruby-2.3.0/gems/rack-1.6.0/lib/rack/builder.rb:55:in `initialize'
+  config.ru:1:in `new'
+  config.ru:1:in `<main>'
+  /usr/local/rvm/gems/ruby-2.3.0/gems/passenger-5.0.28/src/helper-scripts/rack-preloader.rb:110:in `eval'
+  /usr/local/rvm/gems/ruby-2.3.0/gems/passenger-5.0.28/src/helper-scripts/rack-preloader.rb:110:in `preload_app'
+  /usr/local/rvm/gems/ruby-2.3.0/gems/passenger-5.0.28/src/helper-scripts/rack-preloader.rb:156:in `<module:App>'
+  /usr/local/rvm/gems/ruby-2.3.0/gems/passenger-5.0.28/src/helper-scripts/rack-preloader.rb:30:in `<module:PhusionPassenger>'
+  /usr/local/rvm/gems/ruby-2.3.0/gems/passenger-5.0.28/src/helper-scripts/rack-preloader.rb:29:in `<main>'
+
+
+[ 2016-05-09 15:47:55.5572 4827/7fe607cc3700 age/Cor/Con/CheckoutSession.cpp:285 ]: [Client 1-1] Cannot checkout session because a spawning error occurred. The identifier of the error is e4bab9ae. Please see earlier logs for details about the error.
+
+[ 2016-05-09 15:48:46.2082 4827/7fe607cc3700 age/Cor/CoreMain.cpp:532 ]: Signal received. Gracefully shutting down... (send signal 2 more time(s) to force shutdown)
+[ 2016-05-09 15:48:46.2083 4827/7fe609d0a780 age/Cor/CoreMain.cpp:901 ]: Received command to shutdown gracefully. Waiting until all clients have disconnected...
+[ 2016-05-09 15:48:46.2084 4827/7fe6074c2700 Ser/Server.h:817 ]: [ApiServer] Freed 0 spare client objects
+[ 2016-05-09 15:48:46.2084 4827/7fe6074c2700 Ser/Server.h:464 ]: [ApiServer] Shutdown finished
+[ 2016-05-09 15:48:46.2086 4827/7fe607cc3700 Ser/Server.h:817 ]: [ServerThr.1] Freed 128 spare client objects
+[ 2016-05-09 15:48:46.2086 4827/7fe607cc3700 Ser/Server.h:464 ]: [ServerThr.1] Shutdown finished
+
+[ 2016-05-09 15:48:46.2089 4832/7fcbf8c21700 age/Ust/UstRouterMain.cpp:422 ]: Signal received. Gracefully shutting down... (send signal 2 more time(s) to force shutdown)
+[ 2016-05-09 15:48:46.2090 4832/7fcbfaa89780 age/Ust/UstRouterMain.cpp:492 ]: Received command to shutdown gracefully. Waiting until all clients have disconnected...
+[ 2016-05-09 15:48:46.2090 4832/7fcbf3fff700 Ser/Server.h:817 ]: [UstRouterApiServer] Freed 0 spare client objects
+[ 2016-05-09 15:48:46.2090 4832/7fcbf3fff700 Ser/Server.h:464 ]: [UstRouterApiServer] Shutdown finished
+[ 2016-05-09 15:48:46.2117 4832/7fcbf8c21700 Ser/Server.h:464 ]: [UstRouter] Shutdown finished
+[ 2016-05-09 15:48:46.2137 4832/7fcbfaa89780 age/Ust/UstRouterMain.cpp:523 ]: Passenger UstRouter shutdown finished
+[ 2016-05-09 15:48:46.2552 4827/7fe609d0a780 age/Cor/CoreMain.cpp:967 ]: Passenger core shutdown finished

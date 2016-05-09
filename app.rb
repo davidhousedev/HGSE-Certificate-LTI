@@ -13,10 +13,13 @@ require 'oauth/request_proxy/rack_request'
 $oauth_key = "test"
 $oauth_secret = "secret"
 
-# enable sessions so we can remember the launch info between http requests, as
-# the user takes the assessment
-enable :sessions
+
 class LtiApp < Sinatra::Base
+
+  # enable sessions so we can remember the launch info between http requests, as
+  # the user takes the assessment
+  enable :sessions
+  
   # Return string according to custom application launch error codes
   # TODO: develop this into a Case statement to feed descriptive string into error view HTML
   def canvas_launch_error(code)

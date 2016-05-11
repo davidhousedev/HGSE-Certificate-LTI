@@ -8,6 +8,9 @@ require 'oauth/request_proxy/rack_request'
 #load class files
 require './app/call_api'
 
+#load Canvas API token (not included in public git repo)
+require './app/api_token'
+
 #still not sure what this does, but it was included in example app
 # sinatra wants to set x-frame-options by default, disable it
 #disable :protection

@@ -18,9 +18,9 @@ class AssignmentGrade < CallApi
 			"#{student}" + 
 			"?access_token=" + 
 			"#{TOKEN}"
-		puts "=========================="
-		puts "#{@url}"
-		puts "=========================="
+		print "======= Initiated API Call ======="
+		print "#{@url}"
+		print "=================================="
 		#call api with assignment-specific URL
 		super(@url)
 	end

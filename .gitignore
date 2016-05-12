@@ -3,3 +3,4 @@
 *.pid
 passenger.*.lock
 api_token.rb
+Gemfile.lock

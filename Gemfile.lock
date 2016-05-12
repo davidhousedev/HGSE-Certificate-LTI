@@ -1,6 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    json (1.8.3)
     oauth (0.5.1)
     passenger (5.0.28)
       rack
@@ -19,6 +20,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  json
   oauth
   passenger (>= 5.0.25)
   sinatra

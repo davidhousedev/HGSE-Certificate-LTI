@@ -1,9 +1,11 @@
 
-#initialize RubyGems
+#initialize libraries and gems
 require "rubygems"
 require "sinatra/base" 
 require "oauth"
 require 'oauth/request_proxy/rack_request'
+require "net/http"
+require "json"
 
 #load class files
 require './app/call_api'

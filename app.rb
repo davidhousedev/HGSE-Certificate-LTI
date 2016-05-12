@@ -12,6 +12,7 @@ require "json"
 #load class files
 require './app/call_api'
 require './app/assignment_grade'
+require './app/course_info'
 #require './app/error'
 
 #load Canvas API token (not included in public git repo)
@@ -125,12 +126,14 @@ class LtiApp < Sinatra::Base
     end
 
     # get API data on current assignment
-    @api_results = AssignmentGrade.new(session['custom_canvas_api_domain'], session['custom_canvas_course_id'], session['custom_canvas_assignment_id'], session['custom_canvas_user_id']).api_hash
+    @assignment_grade_results = AssignmentGrade.new(session['custom_canvas_api_domain'], session['custom_canvas_course_id'], session['custom_canvas_assignment_id'], session['custom_canvas_user_id']).api_hash
+    @course_info_results = CourseInfo.new(session['custom_canvas_api_domain'], session['custom_canvas_course_id']).api_hash
+
 
     ######## Initialize variables according to specific course ########
     #TODO: Find all variables that would need to alter dynamic content on PDF
     @full_name = session['lis_person_name_full']
-    @credit_hours = @api_results['grade']
+    @credit_hours = @assignment_grade_results['grade']
 
     @course_title = "default"
     @dept_head = "default"
@@ -143,7 +146,7 @@ class LtiApp < Sinatra::Base
 
     # render HTML document with ERB, allowing Ruby code to be 
     # evaluated <% within these tags %>
-    erb :'/index.html'
+    erb :'index.html'
   end
 
   def raise_error(error_number)

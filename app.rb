@@ -1,9 +1,22 @@
 
-#initialize RubyGems
+#initialize libraries and gems
 require "rubygems"
+require "sinatra"
 require "sinatra/base" 
+require "tilt/erb"
 require "oauth"
 require 'oauth/request_proxy/rack_request'
+require "net/http"
+require "json"
+
+#load class files
+require './app/call_api'
+require './app/assignment_grade'
+#require './app/error'
+
+#load Canvas API token (not included in public git repo)
+require './app/api_token'
+
 
 #still not sure what this does, but it was included in example app
 # sinatra wants to set x-frame-options by default, disable it
@@ -19,12 +32,15 @@ class LtiApp < Sinatra::Base
   # enable sessions so we can remember the launch info between http requests, as
   # the user takes the assessment
   enable :sessions
-  
+
+
+
   # Return string according to custom application launch error codes
   # TODO: develop this into a Case statement to feed descriptive string into error view HTML
-  def canvas_launch_error(code)
-  	return ("Error #{code.to_s}")
-  end
+  #def raise_error(1337)(code)
+  #  STDERR.puts("Exited with code #{code}")
+  #	exit(code)
+  #end
 
   # This function will change all course-specific variables according to text found
   # in the course title fed by Canvas.  Additional constomizations can be made by 
@@ -39,37 +55,73 @@ class LtiApp < Sinatra::Base
     end
   end 
 
+
   post "/start" do
     # first we have to verify the oauth signature, to make sure this isn't an
     # attempt to hack the planet
     begin
       signature = OAuth::Signature.build(request, :consumer_secret => $oauth_secret)
       signature.verify() or raise OAuth::Unauthorized
-    rescue OAuth::Signature::UnknownSignatureMethod,
-           OAuth::Unauthorized
-      canvas_launch_error(4)
+      rescue OAuth::Signature::UnknownSignatureMethod,
+             OAuth::Unauthorized
+      return raise_error(1337)
     end
 
     # verify that user is accessing the LTI through Canvas
     unless params['resource_link_id']
-      canvas_launch_error(5)
+      return raise_error(1337)
+    end
+
+    # verify that app was launched from a Canvas assignment
+    unless params['lis_outcome_service_url']
+      return raise_error(1337)
+      #return "hi"
+    end
+
+    unless params['lis_outcome_service_url'] #&& params['lis_result_sourcedid']
+      return %{It looks like this LTI tool wasn't launched as an assignment, or you are trying to take it as a teacher rather than as a a student. Make sure to set up an external tool assignment as outlined <a target="_blank" href="https://github.com/instructure/lti_example">in the README</a> for this example.}
     end
 
     # store the relevant parameters from the launch into the user's session, for
     # access during subsequent http requests.
     # note that the name and email might be blank, if the tool wasn't configured
     # in Canvas to provide that private information.
-    %w( resource_link_id lis_person_name_full lis_person_contact_email_primary context_title context_label).each { |v| session[v] = params[v] }
+      %w( 
+        custom_canvas_api_domain 
+        resource_link_id 
+        lis_person_name_full 
+        lis_person_contact_email_primary 
+        lis_outcome_service_url 
+        context_title 
+        custom_canvas_course_id
+        custom_canvas_assignment_id
+        custom_canvas_user_id
+        ).each { |v| session[v] = params[v] }
+
+        #Log Access Request
+        puts
+        puts "====== Server accessed: ======="
+        session.each {|key, value| 
+            print "#{key} => #{value}"
+        }
+        puts
+        puts
 
     # LTI is ready to launch, redirect to application
     redirect to("/cert")
   end
 
+
   get "/cert" do
 
     # verify that user is accessing the LTI through Canvas
     unless session['resource_link_id']
-      return canvas_launch_error(3)
+      return raise_error(1337)
+    end
+
+    # verify that app was launched from a Canvas assignment
+    unless session['lis_outcome_service_url']
+      return raise_error(1337)
     end
 
     ######## Initialize variables according to specific course ########
@@ -88,16 +140,32 @@ class LtiApp < Sinatra::Base
 
     # render HTML document with ERB, allowing Ruby code to be 
     # evaluated <% within these tags %>
-  	erb :'index.html'
+    erb :'/index.html'
   end
+
+  def raise_error(error_number)
+    @error_code = error_number
+    return "Error: #{@error_code}"
+
+    #redirect to("/error")
+
+    #get "/error" do
+    #  erb :'error.html'
+    #end
+  end
+
+
+
 
   # catch-all route for all other GET requests
   get "/*" do
-  	canvas_launch_error(1)
+  #  #puts "got a request to get'/*'"
+  	return raise_error(1337)
   end
+
 
   # catch-all for all other POST requests
   post "/*" do
-  	canvas_launch_error(2)
+  	return raise_error(1337)
   end
 end

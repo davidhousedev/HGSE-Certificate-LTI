@@ -124,10 +124,13 @@ class LtiApp < Sinatra::Base
       return raise_error(1337)
     end
 
+    # get API data on current assignment
+    @api_results = AssignmentGrade.new(session['custom_canvas_api_domain'], session['custom_canvas_course_id'], session['custom_canvas_assignment_id'], session['custom_canvas_user_id']).api_hash
+
     ######## Initialize variables according to specific course ########
     #TODO: Find all variables that would need to alter dynamic content on PDF
     @full_name = session['lis_person_name_full']
-    @credit_hours = "42" #TODO: Feed this info from Canvas
+    @credit_hours = @api_results['grade']
 
     @course_title = "default"
     @dept_head = "default"

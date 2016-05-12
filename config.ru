@@ -1,3 +1,4 @@
-require File.absolute_path("app/app.rb")
+#require File.absolute_path("app.rb")
+require './app.rb'
 
-run LtiApp
+run Sinatra::Application

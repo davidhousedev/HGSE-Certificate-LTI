@@ -9,6 +9,7 @@ require "json"
 
 #load class files
 require './app/call_api'
+require './app/assignment_grade'
 
 #load Canvas API token (not included in public git repo)
 require './app/api_token'
@@ -67,7 +68,7 @@ class LtiApp < Sinatra::Base
     # access during subsequent http requests.
     # note that the name and email might be blank, if the tool wasn't configured
     # in Canvas to provide that private information.
-    %w( resource_link_id lis_person_name_full lis_person_contact_email_primary context_title context_label).each { |v| session[v] = params[v] }
+    %w( custom_canvas_api_domain resource_link_id lis_person_name_full lis_person_contact_email_primary context_title context_label).each { |v| session[v] = params[v] }
 
     # LTI is ready to launch, redirect to application
     redirect to("/cert")
@@ -94,9 +95,11 @@ class LtiApp < Sinatra::Base
     # If not, render error message
     course_router(session['context_title'])
 
+    #puts AssignmentGrade.new()
+
     # render HTML document with ERB, allowing Ruby code to be 
     # evaluated <% within these tags %>
-  	erb :'index.html'
+  	erb :'../index.html'
   end
 
   # catch-all route for all other GET requests

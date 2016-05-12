@@ -86,7 +86,26 @@ class LtiApp < Sinatra::Base
     # access during subsequent http requests.
     # note that the name and email might be blank, if the tool wasn't configured
     # in Canvas to provide that private information.
-    %w(custom_canvas_api_domain resource_link_id lis_person_name_full lis_person_contact_email_primary lis_outcome_service_url context_title context_label).each { |v| session[v] = params[v] }
+      %w( 
+        custom_canvas_api_domain 
+        resource_link_id 
+        lis_person_name_full 
+        lis_person_contact_email_primary 
+        lis_outcome_service_url 
+        context_title 
+        custom_canvas_course_id
+        custom_canvas_assignment_id
+        custom_canvas_user_id
+        ).each { |v| session[v] = params[v] }
+
+        #Log Access Request
+        puts
+        puts "====== Server accessed: ======="
+        session.each {|key, value| 
+            print "#{key} => #{value}"
+        }
+        puts
+        puts
 
     # LTI is ready to launch, redirect to application
     redirect to("/cert")
@@ -118,8 +137,6 @@ class LtiApp < Sinatra::Base
     # If course matches existing course, set variables and proceed
     # If not, render error message
     course_router(session['context_title'])
-
-    #puts AssignmentGrade.new()
 
     # render HTML document with ERB, allowing Ruby code to be 
     # evaluated <% within these tags %>

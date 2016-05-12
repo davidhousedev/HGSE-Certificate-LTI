@@ -9,7 +9,7 @@ class AssignmentGrade < CallApi
 		#build URL
 		@url = 
 			"https://" + 
-			domain +
+			"#{domain}" +
 			"/api/v1/courses/" + 
 			"#{course}" +
 			"/assignments/" + 
@@ -17,7 +17,10 @@ class AssignmentGrade < CallApi
 			"/submissions/" + 
 			"#{student}" + 
 			"?access_token=" + 
-			TOKEN
+			"#{TOKEN}"
+		puts "=========================="
+		puts "#{@url}"
+		puts "=========================="
 		#call api with assignment-specific URL
 		super(@url)
 	end

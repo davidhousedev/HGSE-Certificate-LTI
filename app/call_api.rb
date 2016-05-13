@@ -40,6 +40,8 @@ class CallApi
 		else
 			@response.value
 		end
+
+		return @api_hash
 	end
 
 	def to_s

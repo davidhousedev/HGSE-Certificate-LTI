@@ -62,6 +62,10 @@ var name = studentObject.fullName
 var hoursWorked = studentObject.creditHours
 // Title of completed course
 var course = courseObject.courseTitle
+// Start month and year of course
+var start = courseObject.startMonthYear
+// End month and year of course
+var end = courseObject.endMonthYear
 // Name of signee
 var signer = courseObject.deptHead
 // Signee role
@@ -102,7 +106,7 @@ for (i = 0; i < courseTitle.length.toString(); i++) {
 // print date.  information may be able to be sent via LTI
 // but as of 5/3/2016 I haven't done any testing
 doc.setFontSize("15")
-doc.myText("September - December 2015", {align: "center"}, 0, (180 + nextLine))
+doc.myText(start + " - " + end, {align: "center"}, 0, (180 + nextLine))
 
 
 

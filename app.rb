@@ -13,10 +13,14 @@ require "json"
 require './app/call_api'
 require './app/assignment_grade'
 require './app/course_info'
+require './app/course_data'
 #require './app/error'
 
 #load Canvas API token (not included in public git repo)
 require './app/api_token'
+
+#initialize file paths as constants
+COURSES_PATH = "./data/courses.json"
 
 
 #still not sure what this does, but it was included in example app
@@ -126,8 +130,25 @@ class LtiApp < Sinatra::Base
     end
 
     # get API data on current assignment
-    @assignment_grade_results = AssignmentGrade.new(session['custom_canvas_api_domain'], session['custom_canvas_course_id'], session['custom_canvas_assignment_id'], session['custom_canvas_user_id']).api_hash
-    @course_info_results = CourseInfo.new(session['custom_canvas_api_domain'], session['custom_canvas_course_id'])
+    @assignment_grade_results = AssignmentGrade.new(
+                                                    session['custom_canvas_api_domain'], 
+                                                    session['custom_canvas_course_id'], 
+                                                    session['custom_canvas_assignment_id'], 
+                                                    session['custom_canvas_user_id']
+                                                    ).api_hash
+    @course_info_results = CourseInfo.new(
+                                          session['custom_canvas_api_domain'], 
+                                          session['custom_canvas_course_id'])
+
+    #INCLUDED WHILE BUILDING, will be removed in final implementation
+    @initial_course_data = [{:title => "learnthings", :faculty => "dude"}, {:title => "dostuff", :faculty => "dood"}]
+    data = CourseData.new(COURSES_PATH)
+    data.write_course_data(@initial_course_data, COURSES_PATH)
+    puts data.json_data
+    if data.find_course("dostuff")
+      puts "found"
+    end
+    #end temporary code
 
     ######## Initialize variables according to specific course ########
     #TODO: Find all variables that would need to alter dynamic content on PDF

@@ -10,11 +10,10 @@ require "net/http"
 require "json"
 
 #load class files
-require './app/call_api'
+require './app/api_controller'
 require './app/assignment_grade'
 require './app/course_info'
 require './app/course_data'
-#require './app/error'
 
 #load Canvas API token (not included in public git repo)
 require './app/api_token'
@@ -80,12 +79,8 @@ class LtiApp < Sinatra::Base
     # verify that app was launched from a Canvas assignment
     unless params['lis_outcome_service_url']
       return raise_error(1337)
-      #return "hi"
     end
 
-    unless params['lis_outcome_service_url'] #&& params['lis_result_sourcedid']
-      return %{It looks like this LTI tool wasn't launched as an assignment, or you are trying to take it as a teacher rather than as a a student. Make sure to set up an external tool assignment as outlined <a target="_blank" href="https://github.com/instructure/lti_example">in the README</a> for this example.}
-    end
 
     # store the relevant parameters from the launch into the user's session, for
     # access during subsequent http requests.
@@ -141,7 +136,10 @@ class LtiApp < Sinatra::Base
                                           session['custom_canvas_course_id'])
 
     #INCLUDED WHILE BUILDING, will be removed in final implementation
-    @initial_course_data = [{:title => "learnthings", :faculty => "dude"}, {:title => "dostuff", :faculty => "dood"}]
+    @initial_course_data = [
+                            {:title => "learnthings", :faculty => "dude"}, 
+                            {:title => "dostuff", :faculty => "dood"}
+                           ]
     data = CourseData.new(COURSES_PATH)
     data.write_course_data(@initial_course_data, COURSES_PATH)
     puts data.json_data

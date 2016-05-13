@@ -4,7 +4,7 @@
 # This API call will provide information about a specific grade event for a specified
 # student, in a specified course.
 #
-class AssignmentGrade < CallApi
+class AssignmentGrade < ApiController
 	def initialize(domain, course, assignment, student)
 		#build URL
 		@url = 

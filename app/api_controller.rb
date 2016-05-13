@@ -3,7 +3,7 @@
 # Retrieves JSON data, parses it, and makes available
 # via the @api_hash attribute.
 #
-class CallApi
+class ApiController
 
 	# allows retrieval of @api_hash by calling .api_hash
 	attr_reader :api_hash

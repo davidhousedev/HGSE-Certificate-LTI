@@ -7,7 +7,7 @@
 # 'start_at'	=>	start date, if available
 # 'end_at'		=>	end date, if available
 #
-class CourseInfo < CallApi
+class CourseInfo < ApiController
 
 	# allows access to course's start and end months/years by calling
 	# the methods .start_month_year and .end_month_year

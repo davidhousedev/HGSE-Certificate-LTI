@@ -128,9 +128,6 @@ class LtiApp < Sinatra::Base
     # get API data on current assignment
     @assignment_grade_results = AssignmentGrade.new(session['custom_canvas_api_domain'], session['custom_canvas_course_id'], session['custom_canvas_assignment_id'], session['custom_canvas_user_id']).api_hash
     @course_info_results = CourseInfo.new(session['custom_canvas_api_domain'], session['custom_canvas_course_id'])
-    puts @course_info_results.start_month_year
-    puts @course_info_results.end_month_year
-    puts @course_info_results.subaccount
 
     ######## Initialize variables according to specific course ########
     #TODO: Find all variables that would need to alter dynamic content on PDF

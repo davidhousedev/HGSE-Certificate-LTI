@@ -15,9 +15,9 @@ class CourseData < JsonController
 			if course[:canvas_title] == "#{canvas_title}"
 				@found_course = course
 				return true
-			else
-				return false
 			end
+			
+			return false
 		end
 	end
 

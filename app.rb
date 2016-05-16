@@ -11,9 +11,11 @@ require "json"
 
 #load class files
 require './app/api_controller'
+require './app/json_controller'
 require './app/assignment_grade'
 require './app/course_info'
 require './app/course_data'
+
 
 #load Canvas API token (not included in public git repo)
 require './app/api_token'
@@ -21,6 +23,7 @@ require './app/api_token'
 #initialize file paths as constants
 COURSES_PATH = "./data/courses.json"
 
+#TODO: implement file lock on JSON file access to prevent overwrites of temp data
 
 #still not sure what this does, but it was included in example app
 # sinatra wants to set x-frame-options by default, disable it
@@ -136,31 +139,36 @@ class LtiApp < Sinatra::Base
                                           session['custom_canvas_course_id'])
 
     #INCLUDED WHILE BUILDING, will be removed in final implementation
-    @initial_course_data = [
-                            {:title => "learnthings", :faculty => "dude"}, 
-                            {:title => "dostuff", :faculty => "dood"}
-                           ]
-    data = CourseData.new(COURSES_PATH)
-    data.write_course_data(@initial_course_data, COURSES_PATH)
-    puts data.json_data
-    if data.find_course("dostuff")
-      puts "found"
-    end
-    #end temporary code
+      @initial_course_data = [
+                                {
+                                :canvas_title => "Cindy Sandbox II",
+                                :certificate_title => "The Best Cindy Sandbox",
+                                :signer => "Cindy Berhtram"
+                                } 
+                             ]
+      data = CourseData.new
+      data.write_course_data(@initial_course_data)
+      puts data.json_data
+      # if current course is found in courses.json, return hash of that course
+      unless data.find_course(session['context_title'])
+        #course is not present in json file
+        return raise_error(1337)
+      end
+      #end temporary code
 
     ######## Initialize variables according to specific course ########
     #TODO: Find all variables that would need to alter dynamic content on PDF
     @full_name = session['lis_person_name_full']
     @credit_hours = @assignment_grade_results['grade']
 
-    @course_title = "default"
-    @dept_head = "default"
+    @course_title = data.found_course[:certificate_title]
+    @dept_head = data.found_course[:signer]
     @dept_head_role = "default"
     @dept_head_signature = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAANjr9RwUqgAAACBjSFJNAACHCAAAjBkAAPlXAACFLQAAe3EAAOugAAA/xAAAIfGatSBVAAABnmlDQ1BJQ0MgUHJvZmlsZQAAKM+t0r9Lw0AUB/BvqiJIdfEngpCpdqhSKoqKCDaDig6xCFUHJU3StFDTcLn6Y1dcBQdBHPwB4iDiJI79A6KL4FBEcHIVBBcp8S6ndFIXHxz53CPJy3s5IORpjlMIAVi1KUlNJuWFxSW5sYJ61CEITXedCVWdxY/x/gCJX+/7+LteRs9X9rNbkWGjMlS/v7yD3yNMWEFAamNus4Sj3BnhMe516lBmlVvPaQYzW4iR+ZTCvMvcYgkfcWeEr7jXdIs/W2aO20beZn5lHjZMV2f981pUdwi7J3TI3Mf7F59GZ4DxHqDOq+WWXODiDOiM1HLRLqA9DdwM1HJvc8FMpA7PzQ4kgpQUTgINT77/FgEa94Dqru9/nPh+9ZTVeATKtl4ia19zkaRb4K+96E3sxT8IhJ8s+g8iDhxPAekmYGYbOHgGei+B1mtAbQbmRyB5d99LzCqIbkUr5DNEo6Yh8+OiFAtF4jqabuJ/g5obQW9K0dkkeStH5Ql2ukxWcNUpUZPE5Glb74/JiXh8EAA+AVgGe4i47fXBAAAACXBIWXMAAAsTAAALEwEAmpwYAAAADUlEQVQYV2NgYGD4DwABBAEAcCBlCwAAAABJRU5ErkJggg=="
 
     # If course matches existing course, set variables and proceed
     # If not, render error message
-    course_router(session['context_title'])
+    #course_router(session['context_title'])
 
     # render HTML document with ERB, allowing Ruby code to be 
     # evaluated <% within these tags %>
@@ -180,16 +188,16 @@ class LtiApp < Sinatra::Base
 
 
 
+  # catch-all routes
+    # catch-all route for all other GET requests
+    get "/*" do
+    #  #puts "got a request to get'/*'"
+    	return raise_error(1337)
+    end
 
-  # catch-all route for all other GET requests
-  get "/*" do
-  #  #puts "got a request to get'/*'"
-  	return raise_error(1337)
-  end
 
-
-  # catch-all for all other POST requests
-  post "/*" do
-  	return raise_error(1337)
-  end
+    # catch-all for all other POST requests
+    post "/*" do
+    	return raise_error(1337)
+    end
 end

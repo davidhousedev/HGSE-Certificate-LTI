@@ -1,24 +1,32 @@
-class CourseData
-	attr_reader :json_data
+##TODO: Mimic super/sub class structure for JSON controller
+## class 3: signaturedata
 
-	def initialize(path)
-		@json_file = File.read(path)
-		@json_data = JSON.parse(@json_file)
-		return @json_data
+class CourseData < JsonController
+	# makes instance variable accessable by calling their read methods
+	attr_reader :found_course
+
+	def initialize
+		super(COURSES_PATH)
 	end
 
-	def write_course_data(arry, path)
-		File.open(path, "w") do |f|
-			f.write(JSON.pretty_generate(arry))
-			f.close
+
+	def find_course(canvas_title)
+		@json_data.each do |course|
+			if course[:canvas_title] == "#{canvas_title}"
+				@found_course = course
+				return true
+			else
+				return false
+			end
 		end
 	end
 
-	def find_course(title)
-		@json_data.each do |course|
-			if course[:title] == "#{title}"
-				return true
-			end
+
+	def write_course_data(arry)
+		@json_data = arry
+		File.open(COURSES_PATH, "w") do |f|
+			f.write(JSON.pretty_generate(arry))
+			f.close
 		end
 	end
 end

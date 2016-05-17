@@ -109,15 +109,9 @@ class LtiApp < Sinatra::Base
 
   get "/cert" do
 
-    # verify that user is accessing the LTI through Canvas
-    unless session['resource_link_id']
-      return raise_error(1337)
-    end
 
-    # verify that app was launched from a Canvas assignment
-    unless session['lis_outcome_service_url']
-      return raise_error(1337)
-    end
+    #executes code to verify that URL is accessed via redirect
+    return verify_session
 
     # get API data on current assignment
     @assignment_grade_results = AssignmentGrade.new(
@@ -185,32 +179,23 @@ class LtiApp < Sinatra::Base
   end
 
   get "/manage" do 
-        # verify that user is accessing the LTI through Canvas
-    unless session['resource_link_id']
-      return raise_error(1337)
-    end
-
-    # verify that app was launched from a Canvas assignment
-    unless session['lis_outcome_service_url']
-      return raise_error(1337)
-    end
+    
+    #executes code to verify that URL is accessed via redirect
+    return verify_session
 
     "Welcome to course admin"
   end
 
   get "/admin" do
-        # verify that user is accessing the LTI through Canvas
-    unless session['resource_link_id']
-      return raise_error(1337)
-    end
-
-    # verify that app was launched from a Canvas assignment
-    unless session['lis_outcome_service_url']
-      return raise_error(1337)
-    end
     
+    #executes code to verify that URL is accessed via redirect
+    return verify_session
+
     "Welcome to account admin"
   end
+
+
+
 
   def raise_error(error_number)
     @error_code = error_number
@@ -221,6 +206,18 @@ class LtiApp < Sinatra::Base
     #get "/error" do
     #  erb :'error.html'
     #end
+  end
+
+  def verify_session
+    # verify that user is accessing the LTI through Canvas
+    unless session['resource_link_id']
+      return raise_error(1337)
+    end
+
+    # verify that app was launched from a Canvas assignment
+    unless session['lis_outcome_service_url']
+      return raise_error(1337)
+    end
   end
 
 

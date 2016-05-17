@@ -70,6 +70,7 @@ class LtiApp < Sinatra::Base
     # note that the name and email might be blank, if the tool wasn't configured
     # in Canvas to provide that private information.
       %w( 
+        roles 
         custom_canvas_api_domain 
         resource_link_id 
         lis_person_name_full 
@@ -84,14 +85,25 @@ class LtiApp < Sinatra::Base
         #Log Access Request
         puts
         puts "====== Server accessed: ======="
-        session.each {|key, value| 
+        params.each {|key, value| 
             print "#{key} => #{value}"
         }
         puts
         puts
 
-    # LTI is ready to launch, redirect to application
-    redirect to("/cert")
+
+    if session['roles'].include?("urn:lti:instrole:ims/lis/Administrator")
+      redirect to("/admin")
+    elsif session['roles'].include?("Instructor")
+      redirect to("/manage")
+    elsif session['roles'].include?("TeachingAssistant")
+      redirect to("/manage")
+    elsif session['roles'].include?("ContentDeveloper")
+      redirect to("/manage")
+    else
+      redirect to("/cert")
+    end
+
   end
 
 
@@ -170,6 +182,34 @@ class LtiApp < Sinatra::Base
     # render HTML document with ERB, allowing Ruby code to be 
     # evaluated <% within these tags %>
     erb :'index.html'
+  end
+
+  get "/manage" do 
+        # verify that user is accessing the LTI through Canvas
+    unless session['resource_link_id']
+      return raise_error(1337)
+    end
+
+    # verify that app was launched from a Canvas assignment
+    unless session['lis_outcome_service_url']
+      return raise_error(1337)
+    end
+
+    "Welcome to course admin"
+  end
+
+  get "/admin" do
+        # verify that user is accessing the LTI through Canvas
+    unless session['resource_link_id']
+      return raise_error(1337)
+    end
+
+    # verify that app was launched from a Canvas assignment
+    unless session['lis_outcome_service_url']
+      return raise_error(1337)
+    end
+    
+    "Welcome to account admin"
   end
 
   def raise_error(error_number)

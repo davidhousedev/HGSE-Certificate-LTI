@@ -11,7 +11,7 @@ class SignatureData < JsonController
 
 	def find_signature(s_name)
 		@json_data.each do |signature|
-			if signature[:signer_name] == "#{s_name}"
+			if signature["signer_name"] == "#{s_name}"
 				@found_signature = signature
 				return true
 			end

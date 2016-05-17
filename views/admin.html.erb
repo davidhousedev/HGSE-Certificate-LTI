@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>IT Admin Panel</title>
+</head>
+<body>
+
+<h1>New Course</h1>
+<br/>
+<form action="/admin" method="POST">
+	Course Name: <input type="text" name="courseName" value="<%= params['courseName'] || @admin_course_title || nil %>">
+	<br/>
+	Certificate Signature: <input type="text" name="courseName" value="<%= params['courseName'] || nil %>">
+	<input type="submit">
+</form>
+
+
+</body>
+</html>

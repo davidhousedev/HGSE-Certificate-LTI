@@ -11,7 +11,6 @@ class CourseData < JsonController
 
 
 	def find_course(canvas_title)
-		puts @json_data.class
 		@json_data.each do |course|
 			if course["canvas_title"] == "#{canvas_title}"
 				@found_course = course

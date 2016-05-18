@@ -2,15 +2,27 @@
 <html>
 <head>
 	<title>IT Admin Panel</title>
+
+
+
+
 </head>
 <body>
 
 <h1>New Course</h1>
+
+
 <br/>
 <form action="/admin" method="POST">
-	<h3><%= "#{@course_message}" %>
+	<h3><%= "#{@course_message}" %></h3>
+	<br/>
 	Course Name: <input type="text" name="courseName" value="<%= params['courseName'] || @admin_course_title || nil %>">
 	<br/>
+	<select name="sigSelect">
+		<option value="default">Select</option>
+		<option value="option2">Option Two</option>
+		<%= @sig_list_html %>
+	</select>
 	<br/>
 	<input type="submit">
 </form>

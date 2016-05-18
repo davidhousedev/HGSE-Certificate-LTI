@@ -43,9 +43,8 @@ class LtiApp < Sinatra::Base
   # the user takes the assessment
   enable :sessions
 
-  # define variables for handling JSON files
-  @course_data = nil
-  @sig_data = nil
+  #alternate session setup
+  #use Rack::Session::Pool, :expire_after => 2592000
 
 
   post "/start" do
@@ -112,6 +111,8 @@ class LtiApp < Sinatra::Base
   end
 
 
+
+
   get "/cert" do
 
 
@@ -132,44 +133,44 @@ class LtiApp < Sinatra::Base
                                           session['custom_canvas_api_domain'], 
                                           session['custom_canvas_course_id'])
 
-      # parse courses.json to Ruby array
-      @course_data = CourseData.new
+    # parse courses.json to Ruby array
+    @@course_data = CourseData.new
 
-      #DEBUG:
-      puts @course_data.json_data
-      
-      # if current course is found, generate @found_course instance variable in CourseData
-      unless @course_data.find_course(session['context_title'])
-        #course is not present in json file
-        return raise_error(1337)
-      end
+    #DEBUG:
+    puts @@course_data.json_data
+    
+    # if current course is found, generate @found_course instance variable in CourseData
+    unless @@course_data.find_course(session['context_title'])
+      #course is not present in json file
+      return raise_error(1337)
+    end
 
-      # parse signatures.json to Ruby array
-      sig_data = SignatureData.new
+    # parse signatures.json to Ruby array
+    @@sig_data = SignatureData.new
 
-      #DEBUG:
-      puts sig_data.json_data[0]["signer"]
+    #DEBUG:
+    puts @@sig_data.json_data[0]["signer"]
 
-      # looks for current course signature 
-      # creates @found_signature instance variable in SignatureData
-      unless sig_data.find_signature(@course_data.json_data[0]["signer"])
-        # if signature for course is not found, JSON configuration is incomplete
-        return raise_error(1337)
-      end
-      #end temporary code
+    # looks for current course signature 
+    # creates @found_signature instance variable in SignatureData
+    unless @@sig_data.find_signature(@@course_data.json_data[0]["signer"])
+      # if signature for course is not found, JSON configuration is incomplete
+      return raise_error(1337)
+    end
+    #end temporary code
 
     ######## Initialize variables according to specific course ########
 
     @full_name = session['lis_person_name_full']
     @credit_hours = @assignment_grade_results['grade']
 
-    @course_title = @course_data.found_course["certificate_title"]
+    @course_title = @@course_data.found_course["certificate_title"]
     @course_start_date = @course_info_results.start_month_year
     @course_end_date = @course_info_results.end_month_year
 
-    @dept_head = @course_data.found_course["signer"]
-    @dept_head_role = sig_data.found_signature["role"]
-    @dept_head_signature = sig_data.found_signature["signature"]
+    @dept_head = @@course_data.found_course["signer"]
+    @dept_head_role = @@sig_data.found_signature["role"]
+    @dept_head_signature = @@sig_data.found_signature["signature"]
 
 
     # render HTML document with ERB, allowing Ruby code to be 
@@ -200,38 +201,46 @@ class LtiApp < Sinatra::Base
     @course_message = "Course not added"
 
     # load json files
-    @course_data = CourseData.new
-    @sig_data = SignatureData.new
+    @@course_data = CourseData.new
+    @@sig_data = SignatureData.new
+
 
     # look for current course in json data
-    if @course_data.find_course(session['context_title'])
-      @admin_course_title = @course_data.found_course["certificate_title"]
+    if @@course_data.find_course(session['context_title'])
+      @admin_course_title = @@course_data.found_course["certificate_title"]
       @course_found = true
       @course_message = "Course FOUND. Submit this form to change information."
     end
+
+    @sig_list_html = ""
+    @@sig_data.json_data.each { |name|
+      @sig_list_html << ("<option value=\"" + name['signer_name'] + "\">" + name['signer_name'] + "</option>")
+      puts @sig_list_html
+    }
 
     erb :'admin.html'
   end
 
   post "/admin" do
     
+
     # verify authenticity of session
     if invalid_session
       return "#{invalid_session}"
     end
 
     @new_title = params['courseName']
-    @course_data = CourseData.new
 
-    puts "Current accessed course is: #{@course_data.json_data[0]['certificate_title']}"
+    puts "Current accessed course is: #{@@course_data.json_data[0]['certificate_title']}"
 
       #TODO: Implement dynamic indexing of course
-      @course_data.json_data[0]['certificate_title'] = @new_title
+      index = @@course_data.json_index
+      @@course_data.json_data[index]['certificate_title'] = @new_title
 
 
-    puts "Current accessed course is: #{@course_data.json_data[0]['certificate_title']}"
+    puts "Current accessed course is: #{@@course_data.json_data[0]['certificate_title']}"
 
-    @course_data.write_course_data
+    @@course_data.write_course_data
 
     print "===== Submitted new course ====="
     params.each { |key, value|

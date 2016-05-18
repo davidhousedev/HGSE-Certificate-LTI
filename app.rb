@@ -224,10 +224,10 @@ class LtiApp < Sinatra::Base
     @course_data = CourseData.new
 
     puts "Current accessed course is: #{@course_data.json_data[0]['certificate_title']}"
-                    ############# Currently Ruby is not receiving params back from HTML form
-    #if course_found
+
+      #TODO: Implement dynamic indexing of course
       @course_data.json_data[0]['certificate_title'] = @new_title
-    #end
+
 
     puts "Current accessed course is: #{@course_data.json_data[0]['certificate_title']}"
 

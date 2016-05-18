@@ -142,20 +142,22 @@ class LtiApp < Sinatra::Base
     # if current course is found, generate @found_course instance variable in CourseData
     unless @@course_data.find_course(session['context_title'])
       #course is not present in json file
-      return raise_error(1337)
+      return raise_error(1)
     end
 
     # parse signatures.json to Ruby array
     @@sig_data = SignatureData.new
 
+    index = @@course_data.json_index
     #DEBUG:
-    puts @@sig_data.json_data[0]["signer"]
+    puts @@sig_data.json_data[index]["signer"]
 
     # looks for current course signature 
     # creates @found_signature instance variable in SignatureData
-    unless @@sig_data.find_signature(@@course_data.json_data[0]["signer"])
+    index = @@course_data.json_index
+    unless @@sig_data.find_signature(@@course_data.json_data[index]["signer"])
       # if signature for course is not found, JSON configuration is incomplete
-      return raise_error(1337)
+      return raise_error("Could not find #{@@sig_data.found_signature} at index: #{index}")
     end
     #end temporary code
 
@@ -229,18 +231,27 @@ class LtiApp < Sinatra::Base
       return "#{invalid_session}"
     end
 
-    @new_title = params['courseName']
+    pp params
 
-    puts "Current accessed course is: #{@@course_data.json_data[0]['certificate_title']}"
+    @new_title = params['courseName']
+    @new_signer = params['sigSelect']
+
+
 
       #TODO: Implement dynamic indexing of course
       index = @@course_data.json_index
       @@course_data.json_data[index]['certificate_title'] = @new_title
+      @@course_data.json_data[index]['signer'] = @new_signer
 
 
-    puts "Current accessed course is: #{@@course_data.json_data[0]['certificate_title']}"
 
     @@course_data.write_course_data
+
+    @sig_list_html = ""
+    @@sig_data.json_data.each { |name|
+      @sig_list_html << ("<option value=\"" + name['signer_name'] + "\">" + name['signer_name'] + "</option>")
+      puts @sig_list_html
+    }
 
     print "===== Submitted new course ====="
     params.each { |key, value|

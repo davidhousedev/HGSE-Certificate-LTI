@@ -1,5 +1,6 @@
 class JsonController
-	attr_reader :json_data
+	attr_accessor :json_data
+	attr_accessor :json_index
 
 	# on init, opens json_file
 	def initialize(path)

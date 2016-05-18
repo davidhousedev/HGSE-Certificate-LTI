@@ -8,10 +8,16 @@
 <h1>New Course</h1>
 <br/>
 <form action="/admin" method="POST">
+	<h3><%= "#{@course_message}" %>
 	Course Name: <input type="text" name="courseName" value="<%= params['courseName'] || @admin_course_title || nil %>">
 	<br/>
-	Certificate Signature: <input type="text" name="courseName" value="<%= params['courseName'] || nil %>">
+	<br/>
 	<input type="submit">
+</form>
+<br/>
+<br/>
+<form action="/cert" method="GET">
+	<input type="submit" value="Launch Student Mode">
 </form>
 
 

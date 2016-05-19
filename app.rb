@@ -224,7 +224,7 @@ class LtiApp < Sinatra::Base
       @sig_list_html << ("<option value=\"\"> Select </option>")
     end
 
-   
+    # populates list of signatures for display
     @@sig_data.json_data.each { |name|
       next if @found_signature == name['signer_name']
       @sig_list_html << ("<option value=\"" + name['signer_name'] + "\">" + name['signer_name'] + "</option>")
@@ -244,8 +244,9 @@ class LtiApp < Sinatra::Base
 
     pp params
 
-    @new_title = params['courseName']
-    @new_signer = params['sigSelect']
+      @new_title = params['courseName']
+      @new_signer = params['sigSelect']
+
 
 
     if @@course_found == true
@@ -260,6 +261,7 @@ class LtiApp < Sinatra::Base
 
     @@course_data.write_course_data
 
+    # populates list of signatures for display
     @sig_list_html = ""
     @sig_list_html << ("<option value=\"" + @new_signer + "\">" + @new_signer + "</option>")
     @@sig_data.json_data.each { |name|
@@ -279,6 +281,15 @@ class LtiApp < Sinatra::Base
     @@course_found = true
     erb :'admin.html'
   end
+
+
+  post "/add-sig" do
+    puts "Redirected from /add-sig to post '/admin'"
+    redirect to("/admin")
+  end
+
+
+
 
 
 

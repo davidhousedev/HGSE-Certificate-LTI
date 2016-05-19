@@ -12,14 +12,19 @@ class CourseData < JsonController
 
 	def find_course(canvas_title)
 		@json_data.each do |course|
-			if course["canvas_title"] == "#{canvas_title}"
+			print "Comparing #{course['canvas_title']} with #{canvas_title}"
+			if course["canvas_title"] === "#{canvas_title}"
 				@found_course = course
 				@json_index = @json_data.index(course)
 				return true
 			end
-			
-			return false
 		end
+		return false
+	end
+
+	def generate(canvas_title, certificate_title, signer)
+		buffer = {"canvas_title" => "#{canvas_title}", "certificate_title" => "#{certificate_title}", "signer" => "#{signer}"}
+		@json_data.push(buffer)
 	end
 
 

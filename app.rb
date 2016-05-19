@@ -195,7 +195,7 @@ class LtiApp < Sinatra::Base
     puts "ran get admin"
 
     @admin_course_title = session['context_title']
-    @course_found = false
+    @@course_found = false
     @course_message = "Course not added"
 
     # load json files
@@ -208,7 +208,8 @@ class LtiApp < Sinatra::Base
     # look for current course in json data
     if @@course_data.find_course(session['context_title'])
       @admin_course_title = @@course_data.found_course["certificate_title"]
-      @course_found = true
+      @@course_found = true
+      puts "@@course_found set to True"
       @course_message = "Course FOUND. Submit this form to change information."
 
       index = @@course_data.json_index
@@ -218,6 +219,9 @@ class LtiApp < Sinatra::Base
       else
         @sig_list_html << ("<option value=\"\"> Select </option>")
       end
+    else
+      puts "@@course_found is False, course not found"
+      @sig_list_html << ("<option value=\"\"> Select </option>")
     end
 
    
@@ -244,12 +248,14 @@ class LtiApp < Sinatra::Base
     @new_signer = params['sigSelect']
 
 
-
-      #TODO: Implement dynamic indexing of course
+    if @@course_found == true
+      puts "Executing course found"
       index = @@course_data.json_index
       @@course_data.json_data[index]['certificate_title'] = @new_title
       @@course_data.json_data[index]['signer'] = @new_signer
-
+    else
+      @@course_data.generate(session['context_title'], @new_title, @new_signer)
+    end
 
 
     @@course_data.write_course_data
@@ -263,13 +269,14 @@ class LtiApp < Sinatra::Base
     }
 
 
-    print "===== Submitted new course ====="
+    print @@course_found ? "==== Modified existing course ====" : "===== Submitted new course ====="
     params.each { |key, value|
       print "#{key} ==> #{value}"
     }
     print "Submitted by #{session['lis_person_name_full']}"
     puts "============== END ============="
 
+    @@course_found = true
     erb :'admin.html'
   end
 

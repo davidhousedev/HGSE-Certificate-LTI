@@ -45,8 +45,8 @@
   <div class="col-xs-6"></div>
 </div>
 
-<div class="container-responsive">
-	<div class="col-xs-7">
+<div class="container-fluid">
+	<div class="col-xs-12 col-md-7">
 		<form action="/admin" method="POST">
 			<div class="col-xs-0 col-sm-1 form-group"></div>
 			<div class="col-xs-12 col-sm-10 form-group">
@@ -83,10 +83,30 @@
 		</form>
 		<div class="col-xs-0 col-sm-1"></div>
 	</div>
-	<div class="col-xs-4">
+	<div class="col-xs-12 col-md-4">
 		<div class="well">
 			<h4>Current Settings</h4>
 		</div>
+		<form action="/admin" method="POST">
+			<div class="col-xs-1 col-sm-2"></div>
+			<div class="col-xs-10 col-sm-8 form-group">
+				<div class="row">
+					<h4>Create New Signature</h4>
+					<label class="control-label" for="sigName">Name</label>
+					<input id="sigName" class="form-control input-sm" name="sigName" placeholder="Name of signer">
+					<label class="control-label" for="sigRole">Role</label>
+					<input id="sigRole" class="form-control input-sm" name="sigRole" placeholder="Signer's role">
+					<label class="control-label" for="sigImg">Signature (Data URL)</label>
+					<input id="sigImg" class="form-control input-sm" name="sigImg" placeholder="Paste Data URL here">
+					<div class="col-xs-3"></div>
+					<div class="col-xs-6 form-group">
+						<button id="newSigSubmit" type="button submit" class="btn btn-primary btn-block">Submit</button>
+					</div>
+					<div class="col-xs-3"></div>
+				</div>
+			</div>
+			<div class="col-xs-1 col-sm-2"></div>
+		</form>
 	</div>
 	<div class="col-xs-1"></div>
 </div>

@@ -23,11 +23,16 @@ class SignatureData < JsonController
 		return false
 	end
 
+	def generate(signer_name, role, signature)
+		buffer = {"signer_name" => "#{signer_name}", "role" => "#{role}", "signature" => "#{signature}"}
+		@json_data.push(buffer)
+	end
 
-	def write_signature_data(arry)
-		@json_data = arry
+
+
+	def write_signature_data
 		File.open(SIGNATURES_PATH, "w") do |f|
-			f.write(JSON.pretty_generate(arry))
+			f.write(JSON.pretty_generate(@json_data))
 			f.close
 		end
 	end

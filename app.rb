@@ -248,7 +248,6 @@ class LtiApp < Sinatra::Base
       @new_signer = params['sigSelect']
 
 
-
     if @@course_found == true
       puts "Executing course found"
       index = @@course_data.json_index
@@ -284,6 +283,14 @@ class LtiApp < Sinatra::Base
 
 
   post "/add-sig" do
+
+    @new_sig_name = params['sigName']
+    @new_sig_role = params['sigRole']
+    @new_sig_img = params['sigImg']
+
+    @@sig_data.generate(@new_sig_name, @new_sig_role, @new_sig_img)
+    @@sig_data.write_signature_data
+
     puts "Redirected from /add-sig to post '/admin'"
     redirect to("/admin")
   end

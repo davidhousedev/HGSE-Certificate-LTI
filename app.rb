@@ -9,6 +9,7 @@ require 'oauth/request_proxy/rack_request'
 require "net/http"
 require "json"
 require "pp"
+require 'date'
 
 #load class files
 require './app/api_controller'
@@ -128,38 +129,33 @@ class LtiApp < Sinatra::Base
                                                     session['custom_canvas_assignment_id'], 
                                                     session['custom_canvas_user_id']
                                                     ).api_hash
+
     # get API data on current course
     @course_info_results = CourseInfo.new(
                                           session['custom_canvas_api_domain'], 
                                           session['custom_canvas_course_id'])
 
+
     # parse courses.json to Ruby array
     @@course_data = CourseData.new
-
-    #DEBUG:
-    puts @@course_data.json_data
     
     # if current course is found, generate @found_course instance variable in CourseData
     unless @@course_data.find_course(session['context_title'])
       #course is not present in json file
-      return raise_error(1)
+      return raise_error("Could not find course")
     end
 
     # parse signatures.json to Ruby array
     @@sig_data = SignatureData.new
-
-    index = @@course_data.json_index
-    #DEBUG:
-    puts @@sig_data.json_data[index]["signer"]
 
     # looks for current course signature 
     # creates @found_signature instance variable in SignatureData
     index = @@course_data.json_index
     unless @@sig_data.find_signature(@@course_data.json_data[index]["signer"])
       # if signature for course is not found, JSON configuration is incomplete
-      return raise_error("Could not find #{@@sig_data.found_signature} at index: #{index}")
+      return raise_error("Could not find signature")
     end
-    #end temporary code
+
 
     ######## Initialize variables according to specific course ########
 
@@ -206,16 +202,27 @@ class LtiApp < Sinatra::Base
     @@course_data = CourseData.new
     @@sig_data = SignatureData.new
 
+    # initialize variables for dynamic HTML
+    @sig_list_html = ""
 
     # look for current course in json data
     if @@course_data.find_course(session['context_title'])
       @admin_course_title = @@course_data.found_course["certificate_title"]
       @course_found = true
       @course_message = "Course FOUND. Submit this form to change information."
+
+      index = @@course_data.json_index
+      if @@sig_data.find_signature(@@course_data.json_data[index]["signer"])
+        @found_signature = @@sig_data.found_signature['signer_name']
+        @sig_list_html << ("<option value=\"" + @found_signature + "\">" + @found_signature + "</option>")
+      else
+        @sig_list_html << ("<option value=\"\"> Select </option>")
+      end
     end
 
-    @sig_list_html = ""
+   
     @@sig_data.json_data.each { |name|
+      next if @found_signature == name['signer_name']
       @sig_list_html << ("<option value=\"" + name['signer_name'] + "\">" + name['signer_name'] + "</option>")
       puts @sig_list_html
     }
@@ -248,10 +255,13 @@ class LtiApp < Sinatra::Base
     @@course_data.write_course_data
 
     @sig_list_html = ""
+    @sig_list_html << ("<option value=\"" + @new_signer + "\">" + @new_signer + "</option>")
     @@sig_data.json_data.each { |name|
+      next if @new_signer == name['signer_name']
       @sig_list_html << ("<option value=\"" + name['signer_name'] + "\">" + name['signer_name'] + "</option>")
       puts @sig_list_html
     }
+
 
     print "===== Submitted new course ====="
     params.each { |key, value|
@@ -262,7 +272,6 @@ class LtiApp < Sinatra::Base
 
     erb :'admin.html'
   end
-
 
 
 

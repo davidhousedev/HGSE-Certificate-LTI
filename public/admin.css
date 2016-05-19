@@ -1,0 +1,17 @@
+#course_name{
+  margin-bottom: 10px;
+}
+
+#header{
+  background-color: #fff;
+  margin-bottom: 20px;
+}
+
+body{
+  background-color: #f3f3f1;
+  font-family: "Open Sans";
+}
+
+label{
+	font-family: "Open Sans";
+}

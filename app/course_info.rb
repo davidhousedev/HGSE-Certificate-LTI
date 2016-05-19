@@ -31,6 +31,8 @@ class CourseInfo < ApiController
 		#call api with assignment-specific URL, stores resulting hash in @api_hash
 		@api_hash = super(@url)
 
+		puts api_hash['start_at']
+
 		# parses dates from Canvas to string with the following format: Month Year
 		# Methods used:
 		# => Date.parse - Parses string from Canvas to Ruby Date Object

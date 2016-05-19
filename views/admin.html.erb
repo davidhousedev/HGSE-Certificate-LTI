@@ -2,16 +2,21 @@
 <html>
 <head>
 	<title>IT Admin Panel</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
-
-
-
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="admin.css">
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>	
+	
 </head>
 <body>
 
-<h1>New Course</h1>
 
-
+<!--
 <br/>
 <form action="/admin" method="POST">
 	<h3><%= "#{@course_message}" %></h3>
@@ -30,6 +35,57 @@
 <form action="/cert" method="GET">
 	<input type="submit" value="Launch Student Mode">
 </form>
+-->
+
+<div id="header" class="row">
+  <div class="col-xs-1"></div>
+  <div class="col-xs-5">
+    <h3>Admin Panel</h3>
+  </div>
+  <div class="col-xs-6"></div>
+</div>
+
+<div class="container-responsive">
+	<div class="col-xs-7">
+		<form action="/admin" method="POST">
+			<div class="col-xs-0 col-sm-1 form-group"></div>
+			<div class="col-xs-12 col-sm-10 form-group">
+				<div class="row form-group">
+					<label class="control-label" for="course_name">Certificate Course Title:</label>
+					<input id="course_name" class="form-control input-lg" name="courseName" placeholder="Certificate course name" value="<%= params['courseName'] || @admin_course_title || nil %>">
+				</div>
+				<div class="row">
+					<div class="col-xs-6 form-group">
+						<label class="control-label" for="signer">Signature:</label>
+						<select id="signer" class="form-control" name="sigSelect" required>
+							<!-- <option value="" autofocus>Select</option> -->
+							<%= @sig_list_html %>
+						</select>
+					</div>
+					<div class="col-xs-6 form-group">
+						<label class="control-label" for="signer">(Not yet implemented) Template:</label>
+						<select id="template" class="form-control" placeholder="template"></select>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-1 col-sm-2 form-group"></div>
+					<div class="col-xs-10 col-sm-8 form-group">
+						<button id="submit" type="button submit" class="btn btn-primary btn-block">Submit</button>
+						<a class="btn btn-default btn-block" href="/cert"> Enter as Student </a>
+					</div>
+					<div class="col-xs-1 col-sm-2"></div>
+				</div>
+			</div>
+		</form>
+		<div class="col-xs-0 col-sm-1"></div>
+	</div>
+	<div class="col-xs-4">
+		<div class="well">
+			<h4>Current Settings</h4>
+		</div>
+	</div>
+	<div class="col-xs-1"></div>
+</div>
 
 
 </body>

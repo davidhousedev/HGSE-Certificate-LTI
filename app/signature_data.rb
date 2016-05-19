@@ -5,6 +5,7 @@ class SignatureData < JsonController
 	attr_reader :found_signature
 
 	def initialize
+		@found_signature = nil
 		super(SIGNATURES_PATH)
 	end
 

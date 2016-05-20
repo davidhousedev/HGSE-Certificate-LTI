@@ -194,6 +194,32 @@ class LtiApp < Sinatra::Base
     end
     puts "ran get admin"
 
+    print "== GET /admin parameters =="
+    params.each { |key, value|
+      print "#{key} ==> #{value}"
+    }
+    puts "== END =="
+
+    # if sig added, display confirmation box
+    if params['deleted']
+      @sig_del = params['deleted']
+      puts "/admin reports successful signature deletion"
+      @sig_alert_del = "<div class=\"bs-callout bs-callout-warning\"><h4>Deleted signature: #{@sig_del}<h4></div>"
+    else
+      @sig_alert_del = ""
+    end
+
+    # if sig removed, display confirmation box
+    if params['q'] == "sig-added"
+      puts "/admin reports successful signature add"
+      @sig_alert_add = "<div class=\"bs-callout bs-callout-success\"><h4>Signature Added<h4></div>"
+    elsif params['q'] == "sig-exists"
+      puts "/admin reports signature already added"
+      @sig_alert_add = "<div class=\"bs-callout bs-callout-warning\"><h4>Signature already exists<h4></div>"
+    else
+      @sig_alert_add = ""
+    end
+
     @admin_course_title = session['context_title']
     @@course_found = false
     @course_message = "Course not added"
@@ -204,6 +230,7 @@ class LtiApp < Sinatra::Base
 
     # initialize variables for dynamic HTML
     @sig_list_html = ""
+    @sig_delete_list = "<option value=\"\"> Select </option>"
 
     # look for current course in json data
     if @@course_data.find_course(session['context_title'])
@@ -217,11 +244,11 @@ class LtiApp < Sinatra::Base
         @found_signature = @@sig_data.found_signature['signer_name']
         @sig_list_html << ("<option value=\"" + @found_signature + "\">" + @found_signature + "</option>")
       else
-        @sig_list_html << ("<option value=\"\"> Select </option>")
+        @sig_list_html << "<option value=\"\"> Select </option>"
       end
     else
       puts "@@course_found is False, course not found"
-      @sig_list_html << ("<option value=\"\"> Select </option>")
+      @sig_list_html << "<option value=\"\"> Select </option>"
     end
 
     # populates list of signatures for display
@@ -230,6 +257,7 @@ class LtiApp < Sinatra::Base
       @sig_list_html << ("<option value=\"" + name['signer_name'] + "\">" + name['signer_name'] + "</option>")
       puts @sig_list_html
     }
+    @sig_delete_list << @sig_list_html
 
     erb :'admin.html'
   end
@@ -288,13 +316,29 @@ class LtiApp < Sinatra::Base
     @new_sig_role = params['sigRole']
     @new_sig_img = params['sigImg']
 
-    @@sig_data.generate(@new_sig_name, @new_sig_role, @new_sig_img)
-    @@sig_data.write_signature_data
+    if !@@sig_data.find_signature(@new_sig_name)    
 
-    puts "Redirected from /add-sig to post '/admin'"
-    redirect to("/admin")
+      @@sig_data.generate(@new_sig_name, @new_sig_role, @new_sig_img)
+      @@sig_data.write_signature_data
+
+      redirect to("/admin?q=sig-added")
+    else
+      redirect to("/admin?q=sig-exists")    
+    end
   end
 
+  post "/remove-sig" do
+    @sig = params['rmSig']
+
+    @@sig_data.find_signature(@sig)
+
+    index = @@sig_data.json_index
+    @@sig_data.json_data.delete_at(index)
+
+    @@sig_data.write_signature_data
+
+    redirect to("/admin?deleted=#{@sig}")
+  end
 
 
 

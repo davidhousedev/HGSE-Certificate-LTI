@@ -151,7 +151,7 @@ class LtiApp < Sinatra::Base
     # looks for current course signature 
     # creates @found_signature instance variable in SignatureData
     index = @@course_data.json_index
-    unless @@sig_data.find_signature(@@course_data.json_data[index]["signer"])
+    unless @@sig_data.find_pair(@@course_data.json_data[index]["signer"], "signer_name")
       # if signature for course is not found, JSON configuration is incomplete
       return raise_error("Could not find signature")
     end
@@ -167,8 +167,8 @@ class LtiApp < Sinatra::Base
     @course_end_date = @course_info_results.end_month_year
 
     @dept_head = @@course_data.found_course["signer"]
-    @dept_head_role = @@sig_data.found_signature["role"]
-    @dept_head_signature = @@sig_data.found_signature["signature"]
+    @dept_head_role = @@sig_data.found_hash["role"]
+    @dept_head_signature = @@sig_data.found_hash["signature"]
 
 
     # render HTML document with ERB, allowing Ruby code to be 
@@ -240,8 +240,8 @@ class LtiApp < Sinatra::Base
       @course_message = "Course FOUND. Submit this form to change information."
 
       index = @@course_data.json_index
-      if @@sig_data.find_signature(@@course_data.json_data[index]["signer"])
-        @found_signature = @@sig_data.found_signature['signer_name']
+      if @@sig_data.find_pair(@@course_data.json_data[index]["signer"], "signer_name")
+        @found_signature = @@sig_data.found_hash['signer_name']
         @sig_list_html << ("<option value=\"" + @found_signature + "\">" + @found_signature + "</option>")
       else
         @sig_list_html << "<option value=\"\"> Select </option>"
@@ -275,6 +275,7 @@ class LtiApp < Sinatra::Base
       @new_title = params['courseName']
       @new_signer = params['sigSelect']
       @new_template = params['templateSelect']
+      @new_method = params['evalMethod']
 
 
     if @@course_found == true
@@ -283,12 +284,13 @@ class LtiApp < Sinatra::Base
       @@course_data.json_data[index]['certificate_title'] = @new_title
       @@course_data.json_data[index]['signer'] = @new_signer
       @@course_data.json_data[index]['template'] = @new_template
+      @@course_data.json_data[index]['eval_method'] = @new_method
     else
-      @@course_data.generate(session['context_title'], @new_title, @new_signer, @new_template)
+      @@course_data.generate(session['context_title'], @new_title, @new_signer, @new_template, @new_method)
     end
 
 
-    @@course_data.write_course_data
+    @@course_data.write_json
 
     # populates list of signatures for display
     @sig_list_html = ""
@@ -318,10 +320,10 @@ class LtiApp < Sinatra::Base
     @new_sig_role = params['sigRole']
     @new_sig_img = params['sigImg']
 
-    if !@@sig_data.find_signature(@new_sig_name)    
+    if !@@sig_data.find_pair(@new_sig_name, "signer_name")    
 
       @@sig_data.generate(@new_sig_name, @new_sig_role, @new_sig_img)
-      @@sig_data.write_signature_data
+      @@sig_data.write_json
 
       redirect to("/admin?q=sig-added")
     else
@@ -332,12 +334,12 @@ class LtiApp < Sinatra::Base
   post "/remove-sig" do
     @sig = params['rmSig']
 
-    @@sig_data.find_signature(@sig)
+    @@sig_data.find_pair(@sig, "signer_name")
 
     index = @@sig_data.json_index
     @@sig_data.json_data.delete_at(index)
 
-    @@sig_data.write_signature_data
+    @@sig_data.write_json
 
     redirect to("/admin?deleted=#{@sig}")
   end

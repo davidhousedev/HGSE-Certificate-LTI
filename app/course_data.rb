@@ -6,7 +6,8 @@ class CourseData < JsonController
 	attr_reader :found_course
 
 	def initialize
-		super(COURSES_PATH)
+		@file_path = COURSES_PATH
+		super(@file_path)
 	end
 
 
@@ -22,22 +23,9 @@ class CourseData < JsonController
 		return false
 	end
 
-	def generate(canvas_title, certificate_title, signer, template)
-		buffer = {"canvas_title" => "#{canvas_title}", "certificate_title" => "#{certificate_title}", "signer" => "#{signer}", "template" => "#{template}"}
+	def generate(canvas_title, certificate_title, signer, template, eval_method)
+		buffer = {"canvas_title" => "#{canvas_title}", "certificate_title" => "#{certificate_title}", "signer" => "#{signer}", "template" => "#{template}", "eval_method" => "#{eval_method}"}
 		pp buffer
 		@json_data.push(buffer)
-	end
-
-
-	def write_course_data
-#		if @found_course == nil
-#			puts "ERROR: Attempted to save changes to course before finding it"
-#			return false
-#		end
-
-		File.open(COURSES_PATH, "w") do |f|
-			f.write(JSON.pretty_generate(@json_data))
-			f.close
-		end
 	end
 end

@@ -139,8 +139,8 @@ class LtiApp < Sinatra::Base
     # parse courses.json to Ruby array
     @@course_data = CourseData.new
     
-    # if current course is found, generate @found_course instance variable in CourseData
-    unless @@course_data.find_course(session['context_title'])
+    # if current course is found, generate @found_hash instance variable in CourseData
+    unless @@course_data.find_pair(session['context_title'], "canvas_title")
       #course is not present in json file
       return raise_error("Could not find course")
     end
@@ -162,11 +162,11 @@ class LtiApp < Sinatra::Base
     @full_name = session['lis_person_name_full']
     @credit_hours = @assignment_grade_results['grade']
 
-    @course_title = @@course_data.found_course["certificate_title"]
+    @course_title = @@course_data.found_hash["certificate_title"]
     @course_start_date = @course_info_results.start_month_year
     @course_end_date = @course_info_results.end_month_year
 
-    @dept_head = @@course_data.found_course["signer"]
+    @dept_head = @@course_data.found_hash["signer"]
     @dept_head_role = @@sig_data.found_hash["role"]
     @dept_head_signature = @@sig_data.found_hash["signature"]
 
@@ -233,8 +233,8 @@ class LtiApp < Sinatra::Base
     @sig_delete_list = "<option value=\"\"> Select </option>"
 
     # look for current course in json data
-    if @@course_data.find_course(session['context_title'])
-      @admin_course_title = @@course_data.found_course["certificate_title"]
+    if @@course_data.find_pair(session['context_title'], "canvas_title")
+      @admin_course_title = @@course_data.found_hash["certificate_title"]
       @@course_found = true
       puts "@@course_found set to True"
       @course_message = "Course FOUND. Submit this form to change information."

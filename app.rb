@@ -215,7 +215,7 @@ class LtiApp < Sinatra::Base
       @sig_alert_add = "<div class=\"bs-callout bs-callout-success\"><h4>Signature Added<h4></div>"
     elsif params['q'] == "sig-exists"
       puts "/admin reports signature already added"
-      @sig_alert_add = "<div class=\"bs-callout bs-callout-warning\"><h4>Signature already exists<h4></div>"
+      @sig_alert_add = "<div class=\"bs-callout bs-callout-warning\"><h4>Signature already added<h4></div>"
     else
       @sig_alert_add = ""
     end
@@ -274,6 +274,7 @@ class LtiApp < Sinatra::Base
 
       @new_title = params['courseName']
       @new_signer = params['sigSelect']
+      @new_template = params['templateSelect']
 
 
     if @@course_found == true
@@ -281,8 +282,9 @@ class LtiApp < Sinatra::Base
       index = @@course_data.json_index
       @@course_data.json_data[index]['certificate_title'] = @new_title
       @@course_data.json_data[index]['signer'] = @new_signer
+      @@course_data.json_data[index]['template'] = @new_template
     else
-      @@course_data.generate(session['context_title'], @new_title, @new_signer)
+      @@course_data.generate(session['context_title'], @new_title, @new_signer, @new_template)
     end
 
 

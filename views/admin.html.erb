@@ -15,28 +15,6 @@
 </head>
 <body>
 
-
-<!--
-<br/>
-<form action="/admin" method="POST">
-	<h3><%= "#{@course_message}" %></h3>
-	<br/>
-	Course Name: <input type="text" name="courseName" value="<%= params['courseName'] || @admin_course_title || nil %>">
-	<br/>
-	<select name="sigSelect">
-		<option value="default">Select</option>
-		<%= @sig_list_html %>
-	</select>
-	<br/>
-	<input type="submit">
-</form>
-<br/>
-<br/>
-<form action="/cert" method="GET">
-	<input type="submit" value="Launch Student Mode">
-</form>
--->
-
 <div id="header" class="row">
   <div class="col-xs-1"></div>
   <div class="col-xs-5">
@@ -63,7 +41,9 @@
 					</div>
 					<div class="col-xs-6 form-group">
 						<label class="control-label" for="template">(Not yet implemented) Template:</label>
-						<select id="template" class="form-control" placeholder="template"></select>
+						<select id="templateSelect" name="templateSelect" class="form-control" placeholder="template">
+							<option value="ppe_online_cert.js">ppe_online_cert.js</option>
+						</select>
 					</div>
 				</div>
 				<div class="row">

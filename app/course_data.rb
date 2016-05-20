@@ -22,8 +22,9 @@ class CourseData < JsonController
 		return false
 	end
 
-	def generate(canvas_title, certificate_title, signer)
-		buffer = {"canvas_title" => "#{canvas_title}", "certificate_title" => "#{certificate_title}", "signer" => "#{signer}"}
+	def generate(canvas_title, certificate_title, signer, template)
+		buffer = {"canvas_title" => "#{canvas_title}", "certificate_title" => "#{certificate_title}", "signer" => "#{signer}", "template" => "#{template}"}
+		pp buffer
 		@json_data.push(buffer)
 	end
 

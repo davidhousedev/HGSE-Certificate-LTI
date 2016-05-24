@@ -289,18 +289,7 @@ class LtiApp < Sinatra::Base
       @@course_data.generate(session['context_title'], @new_title, @new_signer, @new_template, @new_method)
     end
 
-
     @@course_data.write_json
-
-    # populates list of signatures for display
-    @sig_list_html = ""
-    @sig_list_html << ("<option value=\"" + @new_signer + "\">" + @new_signer + "</option>")
-    @@sig_data.json_data.each { |name|
-      next if @new_signer == name['signer_name']
-      @sig_list_html << ("<option value=\"" + name['signer_name'] + "\">" + name['signer_name'] + "</option>")
-      puts @sig_list_html
-    }
-
 
     print @@course_found ? "==== Modified existing course ====" : "===== Submitted new course ====="
     params.each { |key, value|
@@ -310,7 +299,7 @@ class LtiApp < Sinatra::Base
     puts "============== END ============="
 
     @@course_found = true
-    erb :'admin.html'
+    redirect to("/admin")
   end
 
 

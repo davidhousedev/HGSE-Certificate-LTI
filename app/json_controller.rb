@@ -5,6 +5,20 @@ class JsonController
 
 	# on init, opens json_file
 	def initialize(path)
+		
+		# if data directory or json file don't exist, create them
+		unless Dir.exist?("./data")
+			Dir.mkdir("./data")
+		end
+
+		unless File.exist?(path)
+			File.open(path, "w") { |f|
+				f.write("[]")
+				f.close
+			}
+		end
+
+		# read json file to memory and parse to Array
 		@json_file = File.read(path)
 		@json_data = JSON.parse(@json_file)
 	end

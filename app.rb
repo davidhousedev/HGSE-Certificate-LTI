@@ -18,6 +18,8 @@ require './app/assignment_grade'
 require './app/course_info'
 require './app/course_data'
 require './app/signature_data'
+require './app/template_data'
+require './app/evaluation_data'
 
 
 #load Canvas API token (not included in public git repo)
@@ -26,6 +28,8 @@ require './app/api_token'
 #initialize file paths as constants
 COURSES_PATH = "./data/courses.json"
 SIGNATURES_PATH = "./data/signatures.json"
+TEMPLATES_PATH = "./data/templates.json"
+EVAL_METHODS_PATH = "./data/eval_methods.json"
 
 #TODO: implement file lock on JSON file access to prevent overwrites of temp data
 
@@ -47,6 +51,14 @@ class LtiApp < Sinatra::Base
   #alternate session setup
   #use Rack::Session::Pool, :expire_after => 2592000
 
+
+
+
+
+
+  ####################
+  #### LAUNCH LTI ####
+  ####################
 
   post "/start" do
     # first we have to verify the oauth signature, to make sure this isn't an
@@ -114,6 +126,14 @@ class LtiApp < Sinatra::Base
 
 
 
+
+
+
+
+  ########################################
+  #### STUDENT CERTIFICATE GENERATION ####
+  ########################################
+
   get "/cert" do
 
 
@@ -135,6 +155,7 @@ class LtiApp < Sinatra::Base
                                           session['custom_canvas_api_domain'], 
                                           session['custom_canvas_course_id'])
 
+    ######## Gather student and course info from JSON files ########
 
     # parse courses.json to Ruby array
     @@course_data = CourseData.new
@@ -160,7 +181,7 @@ class LtiApp < Sinatra::Base
     ######## Initialize variables according to specific course ########
 
     @full_name = session['lis_person_name_full']
-    @credit_hours = @assignment_grade_results['grade']
+    @credit_hours = @assignment_grade_results['score']
 
     @course_title = @@course_data.found_hash["certificate_title"]
     @course_start_date = @course_info_results.start_month_year
@@ -175,6 +196,19 @@ class LtiApp < Sinatra::Base
     # evaluated <% within these tags %>
     erb :'index.html'
   end
+
+
+
+
+
+
+
+
+
+  #######################
+  ####  ADMIN PANEL  ####
+  #######################
+
 
   get "/manage" do 
     
@@ -335,6 +369,13 @@ class LtiApp < Sinatra::Base
 
 
 
+
+
+
+
+#################
+#### HELPERS ####
+#################
 
 
   def raise_error(error_number)

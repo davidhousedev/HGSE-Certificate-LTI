@@ -2,7 +2,6 @@
 
 class SignatureData < JsonController
 	# makes instance variable accessable by calling their read methods
-	attr_reader :found_hash
 
 	def initialize
 		@found_hash = nil

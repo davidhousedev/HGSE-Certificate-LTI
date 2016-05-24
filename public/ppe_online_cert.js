@@ -25,7 +25,7 @@ var signature = courseObject.deptHeadSignature
 // Name of student receiving certificate
 var name = studentObject.fullName
 // Number of credit hours awarded to student
-var hoursWorked = studentObject.creditHours
+var completionStatement = studentObject.creditHours
 // Title of completed course
 var course = courseObject.courseTitle
 // Start month and year of course
@@ -54,7 +54,7 @@ doc.myText(name, {align: "center"}, 0, 140);
 doc.setFontSize("15");
 doc.setTextColor(0);
 // concatinates text with variable to make text display dynamic content
-doc.myText("Completed " + hoursWorked + " Hours of Work in", {align: "center"}, 0, 160);
+doc.myText(completionStatement, {align: "center"}, 0, 160);
 
 doc.setFontSize("28");
 // splits course title into an array of strings according to page

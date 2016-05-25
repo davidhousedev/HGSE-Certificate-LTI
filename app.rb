@@ -16,10 +16,12 @@ require './app/api_controller'
 require './app/json_controller'
 require './app/assignment_grade'
 require './app/course_info'
+require './app/enrollments'
 require './app/course_data'
 require './app/signature_data'
 require './app/template_data'
 require './app/evaluation_data'
+
 
 
 #load Canvas API token (not included in public git repo)
@@ -209,17 +211,6 @@ class LtiApp < Sinatra::Base
   ####  ADMIN PANEL  ####
   #######################
 
-
-  get "/manage" do 
-    
-    # verify authenticity of session
-    if invalid_session
-      return "#{invalid_session}"
-    end
-
-    "Welcome to course admin"
-  end
-
   get "/admin" do
 
     # verify authenticity of session
@@ -368,14 +359,90 @@ class LtiApp < Sinatra::Base
   end
 
 
+  ###########################
+  #### Course Management ####
+  ###########################
+
+  get "/manage" do
+
+    # verify authenticity of session
+    if invalid_session
+      return "#{invalid_session}"
+    end
+
+
+    @enrollment_data = Enrollments.new(
+                                        session['custom_canvas_api_domain'], 
+                                        session['custom_canvas_course_id']
+                                      )
+
+    @@course_data = CourseData.new
+    @@course_data.find_pair(session['context_title'], "canvas_title")
+    index = @@course_data.json_index
+
+    # gather array of login_ids already added to enrollment
+    @existing_enrollments = []
+    @@course_data.json_data[index]["enrollments"].each { |e|
+      @existing_enrollments.push(e["login_id"])
+    }
+
+    print "=========== CURRENTLY EXISTING ENROLLMENTS ================"
+    pp @existing_enrollments
+    puts "-----------------------------------------------------------"
+
+    # iterates through API data, if absent from json database adds, else skips
+    @enrollment_data.enrollments_list.each { |e|
+      puts e["id"]
+      unless @existing_enrollments.include?(e["login_id"])
+        @@course_data.add_enrollment(e)
+      end
+    }
+
+    @@course_data.write_json
+
+    @enrollments = ""
+    @@course_data.json_data[index]['enrollments'].each { |e|
+      puts e
+
+      checked = nil
+      if e["elegible"] == true
+        checked = "checked"
+        puts "()()()()( CHECKED ENABLED )()()()()"
+      end
+
+      @enrollments << (
+                        "<tr><td>" + e["sortable_name"] + "</td>" + 
+                            "<td>" + e["login_id"] + "</td>" + 
+                            "<td>" + "<input type=\"checkbox\" name=\"" + e["login_id"] + "\" #{checked}>" + "</td></tr>"
+                      )
+    }
+
+    erb :'manage.html'
+  end
+
+  post "/add-elegible" do
+    index = @@course_data.json_index
+    puts "POSTING PARAMS TO ADD-ELEGIBLE"
+    pp params
+
+    @@course_data.json_data[index]['enrollments'].each { |e|
+
+      if params.include?(e["login_id"])
+        puts "FOUND E[LOGINID] IN PARAMS"
+        e["elegible"] = true
+      end
+    }
+
+    @@course_data.write_json
+
+    redirect to("/admin?add-elegible=success")
+  end
 
 
 
-
-
-#################
-#### HELPERS ####
-#################
+  #################
+  #### HELPERS ####
+  #################
 
 
   def raise_error(error_number)
@@ -415,6 +482,6 @@ class LtiApp < Sinatra::Base
 
     # catch-all for all other POST requests
     post "/*" do
-    	return raise_error(1337)
+    	return raise_error("This POST does not exist")
     end
 end

@@ -42,5 +42,6 @@ class CourseInfo < ApiController
 
 		# stores Canvas account id in @subaccount variable
 		@subaccount = @api_hash['account_id']
+
 	end
 end

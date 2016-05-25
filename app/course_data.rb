@@ -33,4 +33,19 @@ class CourseData < JsonController
 		puts @found_hash
 		return true
 	end
+
+	# determines elegibility of student to receive certificate
+	def is_eligible(login_id)
+
+		@found_hash["enrollments"].each { |e|
+			if e["login_id"] == login_id && e["eligible"] == true
+				print "#{e["login_id"]} == #{login_id}"
+				print "#{e["eligible"]} == true"
+				puts "#{login_id} is eligible for a certificate"
+				return true
+			end
+		}
+		puts "#{login_id} is not eligible for a certificate."
+		return false
+	end
 end

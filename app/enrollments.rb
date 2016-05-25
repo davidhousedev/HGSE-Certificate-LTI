@@ -28,7 +28,5 @@ class Enrollments < ApiController
 				@enrollments_list.push(v["user"])
 			end
 		}
-
-
 	end
 end

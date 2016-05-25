@@ -99,6 +99,7 @@ class LtiApp < Sinatra::Base
         custom_canvas_course_id
         custom_canvas_assignment_id
         custom_canvas_user_id
+        custom_canvas_user_login_id
         ).each { |v| session[v] = params[v] }
 
         #Log Access Request
@@ -177,6 +178,15 @@ class LtiApp < Sinatra::Base
     unless @@sig_data.find_pair(@@course_data.json_data[index]["signer"], "signer_name")
       # if signature for course is not found, JSON configuration is incomplete
       return raise_error("Could not find signature")
+    end
+
+    puts "====== Eval method is #{@@course_data.found_hash['eval_method']}======"
+
+    if @@course_data.found_hash['eval_method'] = 'manual'
+      puts "Course eval method is manual"
+      unless @@course_data.is_eligible(session['custom_canvas_user_login_id'])
+        return raise_error("You are not eligible to receive a certificate.")
+      end
     end
 
 
@@ -402,40 +412,43 @@ class LtiApp < Sinatra::Base
 
     @enrollments = ""
     @@course_data.json_data[index]['enrollments'].each { |e|
+      unless e["login_id"]
+        next
+      end
       puts e
 
       checked = nil
-      if e["elegible"] == true
+      if e["eligible"] == true
         checked = "checked"
         puts "()()()()( CHECKED ENABLED )()()()()"
       end
 
-      @enrollments << (
-                        "<tr><td>" + e["sortable_name"] + "</td>" + 
-                            "<td>" + e["login_id"] + "</td>" + 
-                            "<td>" + "<input type=\"checkbox\" name=\"" + e["login_id"] + "\" #{checked}>" + "</td></tr>"
-                      )
+        @enrollments << (
+                          "<tr><td>" + e["sortable_name"] + "</td>" + 
+                              "<td>" + e["login_id"] + "</td>" + 
+                              "<td>" + "<input type=\"checkbox\" name=\"" + e["login_id"] + "\" #{checked}>" + "</td></tr>"
+                        )
     }
 
     erb :'manage.html'
   end
 
-  post "/add-elegible" do
+  post "/add-eligible" do
     index = @@course_data.json_index
-    puts "POSTING PARAMS TO ADD-ELEGIBLE"
+    puts "POSTING PARAMS TO ADD-eligible"
     pp params
 
     @@course_data.json_data[index]['enrollments'].each { |e|
 
       if params.include?(e["login_id"])
         puts "FOUND E[LOGINID] IN PARAMS"
-        e["elegible"] = true
+        e["eligible"] = true
       end
     }
 
     @@course_data.write_json
 
-    redirect to("/admin?add-elegible=success")
+    redirect to("/admin?add-eligible=success")
   end
 
 

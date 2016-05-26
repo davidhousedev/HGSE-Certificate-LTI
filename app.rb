@@ -181,11 +181,17 @@ class LtiApp < Sinatra::Base
 
     puts "====== Eval method is #{@@course_data.found_hash['eval_method']}======"
 
+    # implement completion evaluation settings
     if @@course_data.found_hash['eval_method'] = 'manual'
       puts "Course eval method is manual"
       unless @@course_data.is_eligible(session['custom_canvas_user_login_id'])
         return raise_error("You are not eligible to receive a certificate.")
       end
+    end
+
+    # raise error unless specified template file exists
+    unless File.exist?("./public/#{@@course_data.found_hash['template']}")
+      return raise_error("Certificate tmplate does not exist")
     end
 
 
@@ -197,6 +203,7 @@ class LtiApp < Sinatra::Base
     @course_title = @@course_data.found_hash["certificate_title"]
     @course_start_date = @course_info_results.start_month_year
     @course_end_date = @course_info_results.end_month_year
+    @certificate_template = @@course_data.found_hash['template']   
 
     @dept_head = @@course_data.found_hash["signer"]
     @dept_head_role = @@sig_data.found_hash["role"]

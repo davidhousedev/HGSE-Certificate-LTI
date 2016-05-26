@@ -40,9 +40,11 @@
 						</select>
 					</div>
 					<div class="col-xs-6 form-group">
-						<label class="control-label" for="template">(Not yet implemented) Template:</label>
+						<label class="control-label" for="template">Template:</label>
 						<select id="templateSelect" name="templateSelect" class="form-control" placeholder="template">
-							<option value="ppe_online_cert.js">ppe_online_cert.js</option>
+							<!-- ADD ADDITIONAL TEMPLATE FILES HERE: copy new <option> and set value="" equal to file name in /public/ -->
+							<option value="ppe_online_cert.js">PPE Online Certificate 1</option>
+							<option value="test.js">Test, please ignore</option>
 						</select>
 					</div>
 				</div>
@@ -50,6 +52,7 @@
 					<div class="form-group">
 						<label class="control-label" for="grading">Evaluation Method:</label>
 						<select id="grading" name="evalMethod" class="form-control" placeholder="template">
+							<!-- ADD ADDITIONAL EVALUATION METHODS HERE: copy new <option> and set value="" to the corresponding method in app.rb (GET "/cert") -->
 							<option value="manual">Default: Manual Elegibility</option>
 						</select>
 					</div>

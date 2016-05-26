@@ -268,37 +268,65 @@ class LtiApp < Sinatra::Base
     # load json files
     @@course_data = CourseData.new
     @@sig_data = SignatureData.new
+    @@template_data = TemplateData.new
 
     # initialize variables for dynamic HTML
     @sig_list_html = ""
     @sig_delete_list = "<option value=\"\"> Select </option>"
+    @template_list = ""
+    @template_delete_list = ""
 
-    # look for current course in json data
+    # look for current course in json data and add first option to lists
     if @@course_data.find_pair(session['context_title'], "canvas_title")
+      # pull course title from JSON data
       @admin_course_title = @@course_data.found_hash["certificate_title"]
+      # flag course as found in JSON data (used in POST "/admin")
       @@course_found = true
-      puts "@@course_found set to True"
-      @course_message = "Course FOUND. Submit this form to change information."
 
+      # remmeber index for found course
       index = @@course_data.json_index
+
+      # if signature is configured, write its value to the first option in list
       if @@sig_data.find_pair(@@course_data.json_data[index]["signer"], "signer_name")
         @found_signature = @@sig_data.found_hash['signer_name']
         @sig_list_html << ("<option value=\"" + @found_signature + "\">" + @found_signature + "</option>")
       else
+        # else write a blank option to the first list
         @sig_list_html << "<option value=\"\"> Select </option>"
       end
+
+      # if template is configured, write its value to the first option in the list
+      if @@template_data.find_pair(@@course_data.json_data[index]["template"], "path")
+        @found_template = @@template_data.found_hash
+        @template_list << ("<option value=\"" + @found_template["path"] + "\">" + @found_template["name"] + "</option>")
+        @template_delete_list << "<option value=\"\"> Select </option>"
+      else
+        # else write a blank option to the first list
+        @template_list << "<option value=\"\"> Select </option>"
+      end
+
     else
       puts "@@course_found is False, course not found"
       @sig_list_html << "<option value=\"\"> Select </option>"
+      @template_list << "<option value=\"\"> Select </option>"
     end
 
-    # populates list of signatures for display
+    # populates list of signatures for display, skipping currently configured signature if it exists
     @@sig_data.json_data.each { |name|
       next if @found_signature == name['signer_name']
       @sig_list_html << ("<option value=\"" + name['signer_name'] + "\">" + name['signer_name'] + "</option>")
-      puts @sig_list_html
     }
+    # ammend other signature list with results from course template list
     @sig_delete_list << @sig_list_html
+
+    # populates list of templates for display, skipping currently configured template if it exists
+    @@template_data.json_data.each { |template|
+      if @found_template
+        next if @found_template['path'] == template['path']
+      end
+      @template_list << ("<option value=\"" + template["path"] + "\">" + template["name"] + "</option>")
+    }
+    @template_delete_list << @template_list
 
     erb :'admin.html'
   end
@@ -345,6 +373,11 @@ class LtiApp < Sinatra::Base
 
   post "/add-sig" do
 
+    # verify authenticity of session
+    if invalid_session
+      return "#{invalid_session}"
+    end
+
     @new_sig_name = params['sigName']
     @new_sig_role = params['sigRole']
     @new_sig_img = params['sigImg']
@@ -361,6 +394,12 @@ class LtiApp < Sinatra::Base
   end
 
   post "/remove-sig" do
+
+    # verify authenticity of session
+    if invalid_session
+      return "#{invalid_session}"
+    end
+
     @sig = params['rmSig']
 
     @@sig_data.find_pair(@sig, "signer_name")
@@ -371,6 +410,37 @@ class LtiApp < Sinatra::Base
     @@sig_data.write_json
 
     redirect to("/admin?deleted=#{@sig}")
+  end
+
+  post "/add-template" do
+
+    # verify authenticity of session
+    if invalid_session
+      return "#{invalid_session}"
+    end
+
+    @temp_name = params['tempName']
+    @temp_file = params['tempFile']
+
+    @@template_data.generate(@temp_name, @temp_file)
+
+    @@template_data.write_json
+
+    redirect to ("/admin?q=template-added")
+  end
+
+  post "/remove-template" do
+    @temp = params['rmTemplate']
+    puts "initiating template removal find pair"
+    @@template_data.find_pair(@temp, "path")
+
+    index = @@template_data.json_index
+    puts "template removal index is #{index}"
+    @@template_data.json_data.delete_at(index)
+
+    @@template_data.write_json
+
+    redirect to("/admin?rmtemplate=#{@temp}")
   end
 
 

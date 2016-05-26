@@ -4,11 +4,12 @@ class TemplateData < JsonController
 	# makes instance variable accessable by calling their read methods
 
 	def initialize
-		super(TEMPLATES_PATH)
+		@file_path = TEMPLATES_PATH
+		super(@file_path)
 	end
 
-	def generate(template)
-		buffer = {"template" => "#{template}"}
+	def generate(template_name, file_name)
+		buffer = {"name" => "#{template_name}", "path" => "#{file_name}"}
 		@json_data.push(buffer)
 	end
 

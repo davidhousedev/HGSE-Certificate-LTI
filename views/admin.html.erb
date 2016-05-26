@@ -43,8 +43,7 @@
 						<label class="control-label" for="template">Template:</label>
 						<select id="templateSelect" name="templateSelect" class="form-control" placeholder="template">
 							<!-- ADD ADDITIONAL TEMPLATE FILES HERE: copy new <option> and set value="" equal to file name in /public/ -->
-							<option value="ppe_online_cert.js">PPE Online Certificate 1</option>
-							<option value="test.js">Test, please ignore</option>
+							<%= @template_list %>
 						</select>
 					</div>
 				</div>
@@ -74,10 +73,10 @@
 		</div>
 		<div class="col-xs-1 col-sm-2"></div>
 		<div class="col-xs-10 col-sm-8 form-group">
+			<h4>Manage Signatures</h4>
 			<form action="/add-sig" method="POST">
 				<div class="row">
 					<%= @sig_alert_add %>
-					<h4>Manage Signatures</h4>
 					<label class="control-label" for="sigName">Name</label>
 					<input id="sigName" class="form-control input-sm" name="sigName" placeholder="Name of signer">
 					<label class="control-label" for="sigRole">Role</label>
@@ -104,7 +103,29 @@
 					<button id="rmSigSubmit" type="button submit" class="btn btn-danger btn-block">Delete</button>
 				</div>
 			</form>
-
+			<br/>
+			<h4>Manage Templates</h4>
+			<form action="/add-template" method="POST">
+				<div class="form-group">
+					<label class="control-label" for="tempName">Template Name</label>
+					<input id="tempName" class="form-control input-sm" name="tempName" placeholder="Backend name">
+					<label class="control-label" for="tempFile">File Name</label>
+					<input id="tempFile" class="form-control input-sm" name="tempFile" placeholder="Name of template file">
+					<button id="tempFileSubmit" class="btn btn-primary btn-block">Add Template</button>
+				</div>
+			</form>
+			<br/>
+			<form action="/remove-template" method="POST">
+				<div class="form-group">
+					<label class="control-label" for="rmTemplateList">Delete:</label>
+					<select id="rmTemplateList" class="form-control" name="rmTemplate" required>
+						<%= @template_delete_list %>
+					</select>
+				</div>
+				<div class="form-group">
+					<button id="rmTemplateSubmit" type="button submit" class="btn btn-danger btn-block">Delete</button>
+				</div>
+			</form>
 		</div>
 		<div class="col-xs-1 col-sm-2"></div>
 	</div>

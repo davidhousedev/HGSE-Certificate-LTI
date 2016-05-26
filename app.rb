@@ -206,7 +206,7 @@ class LtiApp < Sinatra::Base
 
     # render HTML document with ERB, allowing Ruby code to be 
     # evaluated <% within these tags %>
-    erb :'index.html'
+    erb :'landingpage.html'
   end
 
 

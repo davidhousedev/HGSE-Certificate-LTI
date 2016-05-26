@@ -299,7 +299,6 @@ class LtiApp < Sinatra::Base
 
   post "/admin" do
     
-
     # verify authenticity of session
     if invalid_session
       return "#{invalid_session}"
@@ -369,6 +368,15 @@ class LtiApp < Sinatra::Base
   end
 
 
+
+
+
+
+
+
+
+
+
   ###########################
   #### Course Management ####
   ###########################
@@ -418,13 +426,14 @@ class LtiApp < Sinatra::Base
       puts e
 
       checked = nil
+      color = nil
       if e["eligible"] == true
         checked = "checked"
-        puts "()()()()( CHECKED ENABLED )()()()()"
+        color = "class=\"success\" "
       end
 
         @enrollments << (
-                          "<tr><td>" + e["sortable_name"] + "</td>" + 
+                          "<tr #{color}><td>" + e["sortable_name"] + "</td>" + 
                               "<td>" + e["login_id"] + "</td>" + 
                               "<td>" + "<input type=\"checkbox\" name=\"" + e["login_id"] + "\" #{checked}>" + "</td></tr>"
                         )
@@ -434,6 +443,12 @@ class LtiApp < Sinatra::Base
   end
 
   post "/add-eligible" do
+    # verify authenticity of session
+    if invalid_session
+      return "#{invalid_session}"
+    end
+
+
     index = @@course_data.json_index
     puts "POSTING PARAMS TO ADD-eligible"
     pp params
@@ -443,13 +458,45 @@ class LtiApp < Sinatra::Base
       if params.include?(e["login_id"])
         puts "FOUND E[LOGINID] IN PARAMS"
         e["eligible"] = true
+      else
+        puts "writing false"
+        e["eligible"] = false
       end
     }
 
     @@course_data.write_json
 
-    redirect to("/admin?add-eligible=success")
+    redirect to("/manage")
   end
+
+  get "/select-all" do
+    # verify authenticity of session
+    if invalid_session
+      return "#{invalid_session}"
+    end
+
+    index = @@course_data.json_index
+
+    @@course_data.json_data[index]['enrollments'].each { |e|
+      e["eligible"] = true
+    }
+
+    @@course_data.write_json
+
+    redirect to("/manage")
+  end
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -489,7 +536,7 @@ class LtiApp < Sinatra::Base
     # catch-all route for all other GET requests
     get "/*" do
     #  #puts "got a request to get'/*'"
-    	return raise_error(1337)
+    	return raise_error("This GET does not exist")
     end
 
 

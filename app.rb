@@ -179,11 +179,9 @@ class LtiApp < Sinatra::Base
       return raise_error("Could not find signature")
     end
 
-    puts "====== Eval method is #{@@course_data.found_hash['eval_method']}======"
 
     # implement completion evaluation settings
     if @@course_data.found_hash['eval_method'] = 'manual'
-      puts "Course eval method is manual"
       unless @@course_data.is_eligible(session['custom_canvas_user_login_id'])
         return raise_error("You are not eligible to receive a certificate.")
       end
@@ -299,6 +297,7 @@ class LtiApp < Sinatra::Base
       if @@template_data.find_pair(@@course_data.json_data[index]["template"], "path")
         @found_template = @@template_data.found_hash
         @template_list << ("<option value=\"" + @found_template["path"] + "\">" + @found_template["name"] + "</option>")
+        # amend delete list with blank select option, as it will not exist in @template_list
         @template_delete_list << "<option value=\"\"> Select </option>"
       else
         # else write a blank option to the first list
@@ -347,7 +346,6 @@ class LtiApp < Sinatra::Base
 
 
     if @@course_found == true
-      puts "Executing course found"
       index = @@course_data.json_index
       @@course_data.json_data[index]['certificate_title'] = @new_title
       @@course_data.json_data[index]['signer'] = @new_signer
@@ -431,11 +429,9 @@ class LtiApp < Sinatra::Base
 
   post "/remove-template" do
     @temp = params['rmTemplate']
-    puts "initiating template removal find pair"
     @@template_data.find_pair(@temp, "path")
 
     index = @@template_data.json_index
-    puts "template removal index is #{index}"
     @@template_data.json_data.delete_at(index)
 
     @@template_data.write_json
@@ -480,13 +476,10 @@ class LtiApp < Sinatra::Base
       @existing_enrollments.push(e["login_id"])
     }
 
-    print "=========== CURRENTLY EXISTING ENROLLMENTS ================"
-    pp @existing_enrollments
-    puts "-----------------------------------------------------------"
 
     # iterates through API data, if absent from json database adds, else skips
     @enrollment_data.enrollments_list.each { |e|
-      puts e["id"]
+
       unless @existing_enrollments.include?(e["login_id"])
         @@course_data.add_enrollment(e)
       end
@@ -499,7 +492,7 @@ class LtiApp < Sinatra::Base
       unless e["login_id"]
         next
       end
-      puts e
+
 
       checked = nil
       color = nil
@@ -526,16 +519,13 @@ class LtiApp < Sinatra::Base
 
 
     index = @@course_data.json_index
-    puts "POSTING PARAMS TO ADD-eligible"
-    pp params
+
 
     @@course_data.json_data[index]['enrollments'].each { |e|
 
       if params.include?(e["login_id"])
-        puts "FOUND E[LOGINID] IN PARAMS"
         e["eligible"] = true
       else
-        puts "writing false"
         e["eligible"] = false
       end
     }

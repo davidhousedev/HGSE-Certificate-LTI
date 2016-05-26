@@ -20,7 +20,6 @@ require './app/enrollments'
 require './app/course_data'
 require './app/signature_data'
 require './app/template_data'
-require './app/evaluation_data'
 
 
 

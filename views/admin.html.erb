@@ -51,8 +51,7 @@
 					<div class="form-group">
 						<label class="control-label" for="grading">Evaluation Method:</label>
 						<select id="grading" name="evalMethod" class="form-control" placeholder="template">
-							<!-- ADD ADDITIONAL EVALUATION METHODS HERE: copy new <option> and set value="" to the corresponding method in app.rb (GET "/cert") -->
-							<option value="manual">Default: Manual Elegibility</option>
+							<%= @eval_list %>
 						</select>
 					</div>
 					<div class="col-xs-1 col-sm-2 form-group"></div>
@@ -130,11 +129,11 @@
 			<h4>Manage Eval Methods</h4>
 			<form action="/add-eval" method="POST">
 				<div class="form-group">
-					<label class="control-label" for="evalName">Evaluation Name</label>
-					<input id="evalName" class="form-control input-sm" name="evalName" placeholder="Backend name">
-					<label class="control-label" for="evalFile">File Name</label>
-					<input id="evalFile" class="form-control input-sm" name="evalFile" placeholder="Name of Evaluation file">
-					<button id="evalFileSubmit" class="btn btn-primary btn-block">Add Evaluation</button>
+					<label class="control-label" for="evalName">Eval Name</label>
+					<input id="evalName" class="form-control input-sm" name="evalName" placeholder="Visible name">
+					<label class="control-label" for="evalMethod">Ruby Method</label>
+					<input id="evalMethod" class="form-control input-sm" name="evalMethod" placeholder="Ruby Method">
+					<button id="evalMethodSubmit" class="btn btn-primary btn-block">Add Evaluation</button>
 				</div>
 			</form>
 			<br/>
@@ -142,7 +141,7 @@
 				<div class="form-group">
 					<label class="control-label" for="rmEvaluationList">Delete:</label>
 					<select id="rmEvaluationList" class="form-control" name="rmEvaluation" required>
-						<%= @evaluation_delete_list %>
+						<%= @eval_delete_list %>
 					</select>
 				</div>
 				<div class="form-group">

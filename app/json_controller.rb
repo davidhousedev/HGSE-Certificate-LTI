@@ -68,11 +68,9 @@ class JsonController
 		@json_data.each { |hash|
 			if @found_hash
 				if @found_hash[back_key] == hash[back_key]
-					puts "skipping #{hash}"
 					next
 				end
 			end
-			puts "adding #{hash}"
 			@html_select_list << ("<option value=\"" + hash[back_key] + "\">" + hash[front_key] + "</option>")
 		}
 		@html_select_delete_list << @html_select_list

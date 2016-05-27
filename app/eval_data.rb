@@ -9,9 +9,11 @@ class EvalData < JsonController
 		super(@file_path)
 	end
 
-	def generate(eval_name, file_name)
-		buffer = {"name" => "#{eval_name}", "path" => "#{file_name}"}
+	def generate(eval_name, method_name)
+		buffer = {"name" => "#{eval_name}", "method" => "#{method_name}"}
 		@json_data.push(buffer)
+
+		puts "WRITING EVAL DATA", buffer, @json_data
 	end
 
 

@@ -280,9 +280,12 @@ class LtiApp < Sinatra::Base
 
 
       ##### HTML option creation consolidation test
+      puts "Creating HTML options for signatures"
       @@sig_data.create_html_options("signer_name", "signer_name", @@course_data, "signer")
+      puts "Creating HTML options for templates"
       @@template_data.create_html_options("path", "name", @@course_data, "template")
-      @@eval_data.create_html_options("method", "name", @@course_data, "evalMethod")
+      puts "Creating HTML options for evaluation methods"
+      @@eval_data.create_html_options("method", "name", @@course_data, "eval_method")
 
     else
       puts "@@course_found is False, course not found"
@@ -296,8 +299,8 @@ class LtiApp < Sinatra::Base
     @sig_delete_list = @@sig_data.html_select_delete_list
     @template_list = @@template_data.html_select_list
     @template_delete_list = @@template_data.html_select_delete_list
-    @eval_list = @@template_data.html_select_list
-    @eval_delete_list = @@template_data.html_select_delete_list
+    @eval_list = @@eval_data.html_select_list
+    @eval_delete_list = @@eval_data.html_select_delete_list
 
     erb :'admin.html'
   end
@@ -402,6 +405,12 @@ class LtiApp < Sinatra::Base
   end
 
   post "/remove-template" do
+
+    # verify authenticity of session
+    if invalid_session
+      return "#{invalid_session}"
+    end
+
     @temp = params['rmTemplate']
     @@template_data.find_pair(@temp, "path")
 
@@ -410,9 +419,44 @@ class LtiApp < Sinatra::Base
 
     @@template_data.write_json
 
-    redirect to("/admin?rmtemplate=#{@temp}")
+    redirect to("/admin?rmTemplate=#{@temp}")
   end
 
+  post "/add-eval" do
+
+    # verify authenticity of session
+    if invalid_session
+      return "#{invalid_session}"
+    end
+
+    @temp_name = params['evalName']
+    @temp_method = params['evalMethod']
+
+    @@eval_data.generate(@temp_name, @temp_method)
+    puts "WRITING NEW EVAL"
+    @@eval_data.write_json
+
+    redirect to("/admin?q=eval-added")
+  end
+
+  post "/remove-eval" do
+    
+    # verify authenticity of session
+    if invalid_session
+      return "#{invalid_session}"
+    end
+
+    @temp = params['rmEvaluation']
+
+    @@eval_data.find_pair(@temp, "method")
+
+    index = @@eval_data.json_index
+    @@eval_data.json_data.delete_at(index)
+
+    @@eval_data.write_json
+
+    redirect to("/admin?rmEval=#{@temp}")
+  end
 
 
 

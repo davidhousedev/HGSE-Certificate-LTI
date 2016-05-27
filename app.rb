@@ -461,26 +461,35 @@ class LtiApp < Sinatra::Base
     end
 
 
+
     @enrollment_data = Enrollments.new(
                                         session['custom_canvas_api_domain'], 
                                         session['custom_canvas_course_id']
                                       )
 
     @@course_data = CourseData.new
-    @@course_data.find_pair(session['context_title'], "canvas_title")
+    unless @@course_data.find_pair(session['context_title'], "canvas_title")
+      return raise_error("Course not found.  Create course record before attempting to access course management.")
+    end
     index = @@course_data.json_index
 
-    # gather array of login_ids already added to enrollment
-    @existing_enrollments = []
-    @@course_data.json_data[index]["enrollments"].each { |e|
-      @existing_enrollments.push(e["login_id"])
-    }
+    # if course has current enrollments in courses.json
+    if @@course_data.json_data[index]["enrollments"]
+      # gather array of login_ids already added to enrollment
+      @existing_enrollments = []
+      @@course_data.json_data[index]["enrollments"].each { |e|
+        @existing_enrollments.push(e["login_id"])
+      }
+    end
 
 
     # iterates through API data, if absent from json database adds, else skips
     @enrollment_data.enrollments_list.each { |e|
-
-      unless @existing_enrollments.include?(e["login_id"])
+      if @existing_enrollments
+        unless @existing_enrollments.include?(e["login_id"])
+          @@course_data.add_enrollment(e)
+        end
+      else
         @@course_data.add_enrollment(e)
       end
     }

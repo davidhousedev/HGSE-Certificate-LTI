@@ -16,7 +16,8 @@ class CourseData < JsonController
 				"certificate_title" => "#{certificate_title}", 
 				"signer" => "#{signer}", 
 				"template" => "#{template}", 
-				"eval_method" => "#{eval_method}", 
+				"eval_method" => "#{eval_method}",
+				"enrollments" => []
 				}
 		pp buffer
 		@json_data.push(buffer)

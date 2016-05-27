@@ -20,6 +20,7 @@ require './app/enrollments'
 require './app/course_data'
 require './app/signature_data'
 require './app/template_data'
+require './app/eval_data'
 
 
 
@@ -267,12 +268,8 @@ class LtiApp < Sinatra::Base
     @@course_data = CourseData.new
     @@sig_data = SignatureData.new
     @@template_data = TemplateData.new
+    @@eval_data = EvalData.new
 
-    # initialize variables for dynamic HTML
-    @sig_list_html = ""
-    @sig_delete_list = "<option value=\"\"> Select </option>"
-    @template_list = ""
-    @template_delete_list = ""
 
     # look for current course in json data and add first option to lists
     if @@course_data.find_pair(session['context_title'], "canvas_title")
@@ -281,54 +278,31 @@ class LtiApp < Sinatra::Base
       # flag course as found in JSON data (used in POST "/admin")
       @@course_found = true
 
-      # remmeber index for found course
-      index = @@course_data.json_index
 
-      # if signature is configured, write its value to the first option in list
-      if @@sig_data.find_pair(@@course_data.json_data[index]["signer"], "signer_name")
-        @found_signature = @@sig_data.found_hash['signer_name']
-        @sig_list_html << ("<option value=\"" + @found_signature + "\">" + @found_signature + "</option>")
-      else
-        # else write a blank option to the first list
-        @sig_list_html << "<option value=\"\"> Select </option>"
-      end
-
-      # if template is configured, write its value to the first option in the list
-      if @@template_data.find_pair(@@course_data.json_data[index]["template"], "path")
-        @found_template = @@template_data.found_hash
-        @template_list << ("<option value=\"" + @found_template["path"] + "\">" + @found_template["name"] + "</option>")
-        # amend delete list with blank select option, as it will not exist in @template_list
-        @template_delete_list << "<option value=\"\"> Select </option>"
-      else
-        # else write a blank option to the first list
-        @template_list << "<option value=\"\"> Select </option>"
-      end
+      ##### HTML option creation consolidation test
+      @@sig_data.create_html_options("signer_name", "signer_name", @@course_data, "signer")
+      @@template_data.create_html_options("path", "name", @@course_data, "template")
+      @@eval_data.create_html_options("method", "name", @@course_data, "evalMethod")
 
     else
       puts "@@course_found is False, course not found"
-      @sig_list_html << "<option value=\"\"> Select </option>"
-      @template_list << "<option value=\"\"> Select </option>"
+
+      @@sig_data.create_html_options("signer_name", "signer_name")
+      @@template_data.create_html_options("path", "name")
+      @@eval_data.create_html_options("method", "name")
     end
 
-    # populates list of signatures for display, skipping currently configured signature if it exists
-    @@sig_data.json_data.each { |name|
-      next if @found_signature == name['signer_name']
-      @sig_list_html << ("<option value=\"" + name['signer_name'] + "\">" + name['signer_name'] + "</option>")
-    }
-    # ammend other signature list with results from course template list
-    @sig_delete_list << @sig_list_html
-
-    # populates list of templates for display, skipping currently configured template if it exists
-    @@template_data.json_data.each { |template|
-      if @found_template
-        next if @found_template['path'] == template['path']
-      end
-      @template_list << ("<option value=\"" + template["path"] + "\">" + template["name"] + "</option>")
-    }
-    @template_delete_list << @template_list
+    @sig_list_html = @@sig_data.html_select_list
+    @sig_delete_list = @@sig_data.html_select_delete_list
+    @template_list = @@template_data.html_select_list
+    @template_delete_list = @@template_data.html_select_delete_list
+    @eval_list = @@template_data.html_select_list
+    @eval_delete_list = @@template_data.html_select_delete_list
 
     erb :'admin.html'
   end
+
+
 
   post "/admin" do
     
